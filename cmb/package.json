@@ -1,0 +1,15 @@
+{
+    "id": "z-calendar",
+    "name": "z-calendar 功能丰富，可滑动切换的日历组件",
+    "version": "1.0.1",
+    "description": "这是一个支持滑动切换，自定义打卡日期，配置项丰富的日历组件。",
+    "keywords": [
+        "calendar",
+        "日历"
+    ],
+    "dependencies": {
+        "echarts": "^6.0.0",
+        "pinyin": "^4.0.0",
+        "vuex-persistedstate": "^4.1.0"
+    }
+}
