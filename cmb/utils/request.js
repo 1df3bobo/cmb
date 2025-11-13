@@ -1,5 +1,6 @@
 import store from "../store"
 import toast from "@/utils/toast.js"
+let config = process.env.config;
 import {
 	getCurrentRoute
 } from '@/utils/index.js'
