@@ -5,6 +5,8 @@ build/
 
 # 依赖目录
 node_modules/
+# uniapp 依赖组件包
+uni_modules/
 
 # 系统文件
 .DS_Store
