@@ -93,19 +93,19 @@
 				opacity: 1,
 				cateList: [{
 					name: '朝朝宝',
-					icon: '/static/home/chaoChaoBao1.png',
+					icon: '/static/home/chaoChaoBao.png',
 					path: '/pages/chaoChaoBao/chaoChaoBao'
 				}, {
 					name: '借钱',
-					icon: '/static/home/borrowMoney1.png',
+					icon: '/static/home/borrowMoney.png',
 					path: '/pages/borrowMoney/borrowMoney'
 				}, {
 					name: '转账',
-					icon: '/static/home/transferAccounts1.png',
+					icon: '/static/home/transferAccounts.png',
 					path: '/pages/transfer/index/index'
 				}, {
 					name: '账户总览',
-					icon: '/static/home/account1.png',
+					icon: '/static/home/account.png',
 					path: '/pages/account/account/account'
 				}],
 				projects: [{
