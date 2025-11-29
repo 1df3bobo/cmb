@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<!--    撑开元素 占位符-->
+		<!--  撑开元素 占位符-->
 		<div v-if="placeholder" :style="{width:'100%',height:`${navBarHeight+statusBarHeight}px`}"></div>
 		<div class="nav"
 			:style="{backgroundColor:bgColor,backgroundImage:bgImage,opacity: opacity,height:`${navBarHeight+statusBarHeight}px`}">
@@ -19,7 +19,7 @@
 					<image @click="goService" v-if="serviceBtn" class="nav-icon" :src="serviceBtnIcon"></image>
 					<!-- 更多按钮 -->
 					<!-- <image v-if="moreBtn" class="nav-icon" :src="moreBtnIcon"></image> -->
-					<zb-popover  v-if="moreBtn" placement="bottom-end" :options="actions" theme="dark" ref="Popover1"
+					<zb-popover v-if="moreBtn" placement="bottom-end" :options="actions" theme="dark" ref="Popover1"
 						@handleClick="handleClick" @select="selectPopover" class="item-popover">
 						<image class="nav-icon" :src="moreBtnIcon"></image>
 					</zb-popover>

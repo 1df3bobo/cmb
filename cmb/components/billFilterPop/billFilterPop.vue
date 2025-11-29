@@ -31,6 +31,16 @@
 						<image @click="isOpen = !isOpen" :class="['filter-title-icon',isOpen?'cate-icon-ani':'']"
 							src="/static/icon/arrow-up.png" mode=""></image>
 					</view>
+          <view class="sub-title" v-if="!isOpen">
+						收入
+					</view>
+					<view class="list" v-if="!isOpen">
+						<view :class="['item',isValueInArray(item.name)?'active':'']" @click="select(item)"
+							v-for="(item,index) in income" :key="index">
+							{{item.name}}
+						</view>
+            <view class="item" style="background: transparent;"></view>
+					</view>
 					<view class="sub-title" v-if="!isOpen">
 						支出
 					</view>
@@ -48,6 +58,7 @@
 							v-for="(item,index) in dealings" :key="index">
 							{{item.name}}
 						</view>
+            <view class="item" style="background: transparent;"></view>
 					</view>
 				</view>
 				<view class="footer">
@@ -88,25 +99,24 @@
 				}, {
 					name: '全部往来'
 				}],
+        income: [{
+					name: '全部收入'
+				}, {
+					name: '红包'
+				}],
 				spending: [{
 					name: '全部支出'
 				}, {
-					name: '还款'
-				}, {
-					name: '缴费充值'
+					name: '转账给他人'
 				}, {
 					name: '餐饮'
 				}, {
-					name: '出行'
-				}, {
-					name: '休闲娱乐'
+					name: '其他支出'
 				}],
 				dealings: [{
 					name: '全部往来'
 				}, {
 					name: '转账给自己'
-				}, {
-					name: '还招行信用卡'
 				}],
 				minAmount: null,
 				maxAmount: null,
@@ -163,7 +173,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			margin-top: 130rpx;
+			margin-top: 30rpx;
 			padding: 0 52rpx 30rpx 58rpx;
 			font-size: 28rpx;
 			color: #010101;
@@ -185,6 +195,8 @@
 			width: 100%;
 			padding: 0 28rpx;
 			box-sizing: border-box;
+      max-height: calc(100vh * 0.7);
+      overflow-y: auto;
 
 			.sub-title {
 				color: #8E8E8E;

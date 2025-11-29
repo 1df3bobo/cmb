@@ -46,7 +46,7 @@
 			<view class="balance">
 				<view class="title">
 					<text class="title-text">账户总览</text>
-					<image @click="state = !state" class="title-icon"
+					<image @click="state = !state" :class="state ? 'open-icon':'title-icon'"
 						:src="state?'/static/icon/icon2.png':'/static/icon/icon1.png'"></image>
 				</view>
 				<view class="balance-data" @click="account">
@@ -85,7 +85,7 @@
 					<view class="item right">
 						<view class="label">收入</view>
 						<view class="content">
-							<text v-if="state" class="symbol">+</text>
+							<text v-if="state" class="symbol">￥</text>
 							<text v-if="state">{{formatAmount(userInfo.incomeTotal)}}</text>
 							<text class="symbol" v-if="!state">******</text>
 						</view>
@@ -421,11 +421,15 @@
 
 				.title-text {
 					position: relative;
-
-
 				}
 
-				.title-icon {
+				.open-icon {
+					width: 40rpx;
+					height: 32rpx;
+					margin-left: 13rpx;
+				}
+
+        .title-icon {
 					width: 40rpx;
 					height: 40rpx;
 					margin-left: 13rpx;

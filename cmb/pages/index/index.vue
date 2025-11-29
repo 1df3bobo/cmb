@@ -6,7 +6,7 @@
 					<image class="nav-scan"
 						:src="opacity<1?'/static/icon/scan-black.png':'/static/icon/scan-white.png'"></image>
 					<view class="nav-search" @click="goSearch"
-						:style="{border:opacity<1?'1rpx solid #ccc': '1rpx solid #F8888E'}">
+						:style="{border:opacity<1?'1rpx solid #ccc': '1rpx solid #fff'}">
 						<image class="nav-search-icon"
 							:src="opacity<1?'/static/icon/search-black.png':'/static/icon/search.png'"></image>
 						<swiper class="search-swiper" :style="{color:opacity<1?'#ccc': '#ffffff'}" circular vertical
@@ -31,8 +31,9 @@
 			</slot>
 		</navbar>
 		<view class="main">
+			<!-- <view class="cate" :style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+440}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}"> -->
 			<view class="cate"
-				:style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+203}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}">
+				:style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+440}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}">
 				<view class="item" @click="goCate(item)" v-for="(item,index) in cateList" :key="index">
 					<image class="icon" :src="item.icon"></image>
 					<text>{{item.name}}</text>
@@ -62,7 +63,7 @@
 				</swiper>
 			</view>
 			<view class="footer-page">
-				<!-- 财富精选 -->
+				<!-- 财富精选
 				<view class="caifu" @click="caifu"></view>
 				<!-- 借钱 -->
 				<view class="jieqian" @click="jieqian"></view>
@@ -92,19 +93,19 @@
 				opacity: 1,
 				cateList: [{
 					name: '朝朝宝',
-					icon: '/static/home/chaoChaoBao.png',
+					icon: '/static/home/chaoChaoBao1.png',
 					path: '/pages/chaoChaoBao/chaoChaoBao'
 				}, {
 					name: '借钱',
-					icon: '/static/home/borrowMoney.png',
+					icon: '/static/home/borrowMoney1.png',
 					path: '/pages/borrowMoney/borrowMoney'
 				}, {
 					name: '转账',
-					icon: '/static/home/transferAccounts.png',
+					icon: '/static/home/transferAccounts1.png',
 					path: '/pages/transfer/index/index'
 				}, {
 					name: '账户总览',
-					icon: '/static/home/account.png',
+					icon: '/static/home/account1.png',
 					path: '/pages/account/account/account'
 				}],
 				projects: [{
@@ -117,11 +118,11 @@
 						path: '/pages/bill/bill'
 					}, {
 						name: '他行卡转入',
-						icon: '/static/home/kingNine.png',
+						icon: '/static/home/kingThree.png',
 						path: '/pages/transfer/single/single'
 					}, {
 						name: '医保码',
-						icon: '/static/home/kingThree.png',
+						icon: '/static/home/kingFour.png',
 						path: `/pages/commonPages/commonPages?pageImage=/static/pages/ybm.png&title=医保码&serviceBtn=${false}`
 					}, {
 						name: '热门活动',
@@ -130,20 +131,20 @@
 					},
 					{
 						name: '流水导出',
-						icon: '/static/home/flowExport.png',
+						icon: '/static/home/kingSix.png',
 						path: '/pages/water/water/water'
 					}, {
 						name: '养老金融',
-						icon: '/static/home/kingSix.png',
+						icon: '/static/home/kingSeven.png',
 						path: `/pages/common/common?pageImage=/static/pages/grylj.png&serviceBtn=${false}&moreBtn=${false}`
 					},
 					{
 						name: 'M+会员',
-						icon: '/static/home/kingSix.png',
+						icon: '/static/home/kingEight.png',
 						path: '/pages/mMember/mMember'
 					}, {
 						name: '影票',
-						icon: '/static/home/kingEight.png',
+						icon: '/static/home/kingNight.png',
 						path: '/pages/movieTicket/movieTicket'
 					},
 					{
@@ -305,8 +306,8 @@
 		padding-right: 43rpx;
 		box-sizing: border-box;
 		justify-content: space-between;
-		background-image: url(/static/home/headerTop.png);
-		background-position: top;
+		background-image: url(/static/home/home-header-bg.png);
+		background-position: bottom;
 		background-repeat: no-repeat;
 		background-size: cover;
 
@@ -332,7 +333,6 @@
 		width: 100%;
 		height: 294rpx;
 		background-color: #FFFFFF;
-		margin-top: -32rpx;
 		border-radius: 32rpx 32rpx 0 0;
 		display: flex;
 		align-items: center;

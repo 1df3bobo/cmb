@@ -57,7 +57,7 @@
 					</view>
 				</view>
 				<view class="item">
-					<view class="label">展示对方交易信息</view>
+					<view class="label">展示交易对手信息</view>
 					<view class="content">
 						<u-switch v-model="transactioninfShow" inactiveColor='#D2CFC8' activeColor="#316EE5"
 							size="24"></u-switch>
@@ -67,6 +67,13 @@
 					<view class="label">显示完整卡号</view>
 					<view class="content">
 						<u-switch v-model="cardNumberShow" inactiveColor='#D2CFC8' activeColor="#316EE5"
+							size="24"></u-switch>
+					</view>
+				</view>
+        <view class="item">
+					<view class="label">仅展示活期户流水</view>
+					<view class="content">
+						<u-switch v-model="transactioninfShow2" inactiveColor='#D2CFC8' activeColor="#316EE5"
 							size="24"></u-switch>
 					</view>
 				</view>
@@ -105,10 +112,16 @@
 					温馨提示
 				</view>
 				<view class="content">
-					1.交易流水涉及您的个人隐私，为保护您的隐私，收件人限本人
+					1.交易流水涉及您的个人隐私，为保护您的隐私，收件人限本人。
 				</view>
 				<view class="content">
-					2.请根据需要选择是否展示完整卡号
+					2.单次申请时间跨度最大支持10年，且交易流水记录最大支持2万条，时间跨度选择较长可能会超出限制导致申请失败。
+				</view>
+        <view class="content">
+					3.线上支持2009年1月1日之后的交易流水，更早的交易流水请前往网点打印。
+				</view>
+        <view class="content">
+					4.请根据需要选择是否展示完整卡号。
 				</view>
 			</view>
 		</view>
@@ -168,6 +181,7 @@
 				endTime: '', // 开始时间
 				currency: '全部', // 币种
 				transactioninfShow: true, // 展示对方交易信息
+        transactioninfShow2: true, // 仅展示活期户流水
 				cardNumberShow: false, // 显示完整卡号
 				email: '', //邮箱
 				selectDateTab: '1',

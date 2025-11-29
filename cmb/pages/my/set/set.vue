@@ -3,8 +3,8 @@
 		<navbar bg-color="#f8f8f8" title="设置" ai-btn more-btn>
 		</navbar>
 		<view class="main">
-			<view class="user-info">
-				<image class="user-header" @click="commonPages('/pages/my/basicInfo/basicInfo')"
+			<view class="user-info" @click="commonPages('/pages/my/basicInfo/basicInfo')">
+				<image class="user-header"
 					src="/static/home/head-image.png" mode=""></image>
 				<view class="user-content">
 					<view class="user-name">

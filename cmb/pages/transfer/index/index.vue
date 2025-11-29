@@ -18,20 +18,31 @@
 			<view class="recent">
 				<view class="recent-title">
 					<view class="recent-title-left">最近转账伙伴</view>
-					<view class="recent-title-right">全部 0</view>
+					<view class="recent-title-right">全部 {{ userInfo.bankList.length + contactsList.length }}</view>
 				</view>
 				<view class="list">
-					<view :class="['item',isMoreList?'border':'']" @click="isMoreList = !isMoreList">
+					<view :class="['item',!isMoreList?'border':'']" @click="isMoreList = !isMoreList">
 						<image class="user-icon" src="/static/transfer/user-icon.png" mode=""></image>
 						<view class="user-name">{{userInfo.realName}}</view>
-						<view class="user-num">0</view>
+						<view class="user-num">{{ userInfo.bankList.length }}</view>
 						<view class="user-share">分享卡号</view>
-						<image :class="['user-arrow',isMoreList?'user-arrow-acitive':'']"
+						<image :class="['user-arrow',!isMoreList?'user-arrow-acitive':'']"
 							src="/static/icon/arrow-top.png" mode="">
 						</image>
 					</view>
-					<view :class="['item',isMoreList?'border':'']" @click="shortcut(item)"
-						v-for="(item,index) in contactsList" :key="index">
+          <view style="margin-left: 98rpx;" v-if="isMoreList" class="item mine border" @click="mineShortcut(item)"
+						v-for="(item,index) in userInfo.bankList" :key="item.bankCard">
+						<image class="user-icon" src="http://img.chinajianse.com/bank/icon/CMB.png" mode=""></image>
+						<view class="user-name bank-name">
+							<view>
+								{{item.realName}}
+							</view>
+							<view class="bank-name-text">{{item.bankName}}<text>({{item.bankCard.slice(-4)}})</text>
+							</view>
+						</view>
+					</view>
+					<view class="item border" @click="shortcut(item)"
+						v-for="(item,index) in contactsList" :key="item.bankCard">
 						<image class="user-icon" :src="item.icon" mode=""></image>
 						<view class="user-name bank-name">
 							<view>
@@ -122,6 +133,12 @@
 			doTransfer(url) {
 				navigateTo({
 					url: url
+				})
+			},
+      mineShortcut(item) {
+        const data = { ...item, name: item.realName };
+				navigateTo({
+					url: '/pages/transfer/shortcut/shortcut?contactsInfo=' + JSON.stringify(data)
 				})
 			},
 			shortcut(item) {
@@ -259,7 +276,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				margin-bottom: 70rpx;
+				margin-bottom: 34rpx;
 
 				.recent-title-left {
 					color: #333333;
@@ -288,6 +305,7 @@
 					display: flex;
 					align-items: center;
 					padding-bottom: 36rpx;
+          padding-top: 36rpx;
 					position: relative;
 
 					&.border:before {
@@ -358,6 +376,12 @@
 					}
 
 				}
+        
+        .mine {
+          &.border:before {
+						left: 0;
+					}
+        }
 			}
 		}
 	}

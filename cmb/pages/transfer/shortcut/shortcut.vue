@@ -11,7 +11,7 @@
 			<view class="payee">
 				<view class="title">收款人</view>
 				<view class="info">
-					<image class="info-icon" src="/static/logo/58x58.png"></image>
+					<image class="info-icon" :src="contactsInfo.icon"></image>
 					<view class="info-content">
 						<view class="name">
 							<text>{{contactsInfo.name}}</text>

@@ -61,11 +61,11 @@
 		},
 		onPageScroll(e) {
 			var scrollTop = e.scrollTop;
-			if (scrollTop >= this.statusBarHeight) {
-				this.opacity = 0
+			if (scrollTop == 0) {
+        this.opacity = 1
 				return
-			} else if (scrollTop == 0) {
-				this.opacity = 1
+			} else if (scrollTop >= this.statusBarHeight) {
+				this.opacity = 0
 				return
 			}
 			this.opacity = 1 - (scrollTop / this.statusBarHeight)

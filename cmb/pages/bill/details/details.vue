@@ -1,247 +1,309 @@
 <template>
-	<view class="app">
-		<navbar bg-color="#f8f8f8" more-btn service-btn title="交易详情">
-		</navbar>
-		<view class="main">
-			<view class="container">
-				<view class="info">
-					<view class="info-type">
-						<image class="info-type-icon" src="/static/home/bill-details-icon3.png" mode=""></image>
-						{{details.excerpt}}
-					</view>
-					<view class="info-money">
-						{{momneyStr}}
-					</view>
-				</view>
-				<view class="cell">
-					<view class="label">交易卡号</view>
-					<view class="content">{{details.bankCard}}</view>
-				</view>
-				<view class="cell">
-					<view class="label">交易时间</view>
-					<view class="content">{{details.transactionTime}}</view>
-				</view>
-				<view class="cell">
-					<view class="label">收款账号</view>
-					<view class="content">{{details.oppositeAccount}}</view>
-				</view>
-				<view class="cell">
-					<view class="label">转账附言</view>
-					<view class="content"></view>
-				</view>
-				<view class="cell">
-					<view class="label">银行交易类型</view>
-					<view class="content">{{details.merchantBranch}}</view>
-				</view>
-			</view>
-			<view class="banner"></view>
-			<view class="container container2">
-				<view class="cell" @click="classifyPopShow = true">
-					<view class="label">分类</view>
-					<view class="content">
-						<image class="content-cate-icon" :src="classify.icon" mode=""></image>
-						<text>{{classify.name}}</text>
-						<image class="content-cate-arrow" src="/static/home/bill-details-icon1.png" mode=""></image>
-					</view>
-				</view>
-				<view class="cell" @click="showPop = true">
-					<view class="label">所属账本</view>
-					<view class="content">
-						<text class="content-select">请选择</text>
-						<image class="content-cate-arrow" src="/static/home/bill-details-icon1.png" mode=""></image>
-					</view>
-				</view>
-				<view class="cell">
-					<view class="label">不计入本月收支</view>
-					<view class="content">
-						<u-switch v-model="show" inactiveColor='#D2CFC8' activeColor="#316EE5" size="24"></u-switch>
-					</view>
-				</view>
-				<view class="remark">
-					<view class="label">备注</view>
-					<view class="content">
-						<input class="content-input" placeholder-style="color:#C7C7C7" placeholder="记录点什么..."
-							type="text" />
-						<image class="content-icon" src="/static/home/bill-details-icon2.png" mode=""></image>
-					</view>
-				</view>
-			</view>
-		</view>
-		<billLedger :show="showPop" @close="showPop = false"></billLedger>
-		<billClassifyPop @confirm="classifyConfirm" :type="details.type" :show="classifyPopShow"
-			@close="classifyPopShow = false">
-		</billClassifyPop>
-	</view>
+ <view class="app">
+  <navbar bg-color="#f8f8f8" more-btn service-btn title="交易详情">
+  </navbar>
+  <view class="main">
+   <view class="container">
+    <view class="info">
+     <view class="info-type">
+      <image class="info-type-icon" :src="icon" mode=""></image>
+      {{details.excerpt}}
+     </view>
+     <view class="info-money">
+      {{momneyStr}}
+     </view>
+    </view>
+    <view class="cell">
+     <view class="label">交易卡号</view>
+     <view class="content">{{details.bankCard}}</view>
+    </view>
+    <view class="cell">
+     <view class="label">交易时间</view>
+     <view class="content">{{details.transactionTime}}</view>
+    </view>
+    <view class="cell">
+     <view class="label">收款账号</view>
+     <view class="content">{{details.oppositeAccount}}</view>
+    </view>
+    <view class="cell" v-if="details.merchantBranch">
+     <view class="label">转账附言</view>
+     <view class="content">{{details.merchantBranch}}</view>
+    </view>
+    <view class="cell">
+     <view class="label">银行交易类型</view>
+     <view class="content">{{details.transactionChannel}}</view>
+    </view>
+   </view>
+   <view class="banner"></view>
+   <view class="container container2">
+    <view class="cell" @click="classifyPopShow = true">
+     <view class="label">分类</view>
+     <view class="content">
+      <image class="content-cate-icon" :src="classify.icon" mode=""></image>
+      <text>{{classify.name}}</text>
+      <image class="content-cate-arrow" src="/static/home/bill-details-icon1.png" mode=""></image>
+     </view>
+    </view>
+    <view class="cell" @click="showPop = true">
+     <view class="label">所属账本</view>
+     <view class="content">
+      <text class="content-select">请选择</text>
+      <image class="content-cate-arrow" src="/static/home/bill-details-icon1.png" mode=""></image>
+     </view>
+    </view>
+    <view class="cell">
+     <view class="label">不计入本月收支</view>
+     <view class="content">
+      <u-switch v-model="show" inactiveColor='#D2CFC8' activeColor="#316EE5" size="24"></u-switch>
+     </view>
+    </view>
+    <view class="remark">
+     <view class="label">备注</view>
+     <view class="content">
+      <input class="content-input" placeholder-style="color:#C7C7C7" placeholder="记录点什么..."
+       type="text" />
+      <image class="content-icon" src="/static/home/bill-details-icon2.png" mode=""></image>
+     </view>
+    </view>
+   </view>
+   <view class="footer-pl"></view>
+   <view class="footer">
+    <view class="footer-content">
+     <view class="footer-btn" @click="goTransfer">给TA转账</view>
+     <view class="footer-btn" @click="goRecord">查看往来记录</view>
+    </view>
+   </view>
+  </view>
+  <billLedger :show="showPop" @close="showPop = false"></billLedger>
+  <billClassifyPop @confirm="classifyConfirm" :type="details.type" :show="classifyPopShow"
+   @close="classifyPopShow = false">
+  </billClassifyPop>
+ </view>
 </template>
 
 <script>
-	import {
-		formatAmount
-	} from '@/utils/index.js'
-	export default {
-		data() {
-			return {
-				details: {},
-				show: false,
-				showPop: false,
-				classifyPopShow: false,
-				classify: {
-					icon: '/static/icon/billCate/touzishouyi.png',
-					name: '投资收益'
-				}
-			}
-		},
-		onLoad(op) {
-			if (op.details) {
-				this.details = JSON.parse(op.details)
-			}
-		},
-		computed: {
-			momneyStr() {
-				let num = parseFloat(this.details.amount)
-				if (num > 0) {
-					return `￥${formatAmount(num.toFixed(2))}`
-				} else {
-					return `-￥${formatAmount(Math.abs(num).toFixed(2))}`
-				}
-			}
-		},
-		methods: {
-			classifyConfirm(item) {
-				this.classify = item
-			}
-		}
-	}
+ import {
+  formatAmount,
+  navigateTo
+ } from '@/utils/index.js'
+ export default {
+  data() {
+   return {
+    details: {},
+    show: false,
+    showPop: false,
+    classifyPopShow: false,
+    icon: '',
+    classify: {
+     icon: '/static/icon/billCate/touzishouyi.png',
+     name: '投资收益'
+    }
+   }
+  },
+  onLoad(op) {
+   if (op.details) {
+    this.details = JSON.parse(op.details)
+    this.icon = op.icon
+   }
+  },
+  computed: {
+   momneyStr() {
+    let num = parseFloat(this.details.amount)
+    if (num > 0) {
+     return `￥${formatAmount(num.toFixed(2))}`
+    } else {
+     return `-￥${formatAmount(Math.abs(num).toFixed(2))}`
+    }
+   }
+  },
+  methods: {
+   goTransfer() {
+    navigateTo({
+     url: '/pages/transfer/bank/bank'
+    })
+   },
+   goRecord() {
+    navigateTo({
+     url: '/pages/transfer/record/record'
+    })
+   },
+   classifyConfirm(item) {
+    this.classify = item
+   }
+  }
+ }
 </script>
 
 <style lang="scss" scoped>
-	.app {
-		width: 100%;
-		min-height: 100vh;
-		background-color: #f8f8f8;
-	}
+ .app {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+ }
 
-	.main {
-		width: 100%;
-		padding-bottom: 50rpx;
+ .main {
+  width: 100%;
+  padding-bottom: 50rpx;
 
-		.banner {
-			width: 690rpx;
-			height: 92rpx;
-			background-image: url(/static/home/bill-details-ht.png);
-			background-position: center;
-			background-size: cover;
-			background-repeat: no-repeat;
-			margin: auto;
-		}
+  .footer-pl {
+   width: 750rpx;
+   height: calc(env(safe-area-inset-bottom) + 116rpx);
+  }
 
-		.container2 {
-			padding-top: 25rpx;
+  .footer {
+   width: 100%;
+   padding-bottom: env(safe-area-inset-bottom);
+   position: fixed;
+   bottom: 0;
+   left: 0;
+   background-color: #FFFFFF;
+   z-index: 10;
 
-		}
+   .footer-content {
+    width: 750rpx;
+    height: 116rpx;
+    display: flex;
+    align-items: center;
+    color: #769ADC;
+    font-size: 30rpx;
+    position: relative;
 
-		.container {
-			width: 690rpx;
-			background: #FFFFFF;
-			border-radius: 12rpx 12rpx 12rpx 12rpx;
-			margin: 19rpx auto;
-			padding-bottom: 25rpx;
+    &:before {
+     width: 2rpx;
+     height: 60rpx;
+     left: 50%;
+     top: 50%;
+     position: absolute;
+     content: '';
+     z-index: 10;
+     background-color: #f8f8f8;
+     transform: translate(-50%, -50%);
+    }
 
-			.remark {
-				padding: 25rpx 29rpx;
-				font-size: 26rpx;
-				line-height: 1;
+    .footer-btn {
+     width: 50%;
+     text-align: center;
+    }
+   }
+  }
 
-				.label {
-					color: #999999;
-					margin-bottom: 26rpx;
-				}
+  .banner {
+   width: 690rpx;
+   height: 92rpx;
+   background-image: url(/static/home/bill-details-ht.png);
+   background-position: center;
+   background-size: cover;
+   background-repeat: no-repeat;
+   margin: auto;
+  }
 
-				.content {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					border-bottom: 1rpx solid #EFEFEF;
-					padding-bottom: 29rpx;
+  .container2 {
+   padding-top: 25rpx;
 
-					.content-input {
-						font-size: 26rpx;
-						line-height: 1;
-					}
+  }
 
-					.content-icon {
-						width: 40rpx;
-						height: 40rpx;
-					}
-				}
-			}
+  .container {
+   width: 690rpx;
+   background: #FFFFFF;
+   border-radius: 12rpx 12rpx 12rpx 12rpx;
+   margin: 19rpx auto;
+   padding-bottom: 25rpx;
 
-			.cell {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				padding: 25rpx 29rpx;
-				font-size: 26rpx;
-				line-height: 1;
+   .remark {
+    padding: 25rpx 29rpx;
+    font-size: 26rpx;
+    line-height: 1;
 
-				.label {
-					color: #999999;
-				}
+    .label {
+     color: #999999;
+     margin-bottom: 26rpx;
+    }
 
-				.content {
-					color: #383838;
-					display: flex;
-					align-items: center;
+    .content {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     border-bottom: 1rpx solid #EFEFEF;
+     padding-bottom: 29rpx;
 
-					.content-select {
-						color: #999999;
-					}
+     .content-input {
+      font-size: 26rpx;
+      line-height: 1;
+     }
 
-					.content-cate-icon {
-						width: 50rpx;
-						height: 50rpx;
-						margin-right: 12rpx;
-					}
+     .content-icon {
+      width: 40rpx;
+      height: 40rpx;
+     }
+    }
+   }
 
-					.content-cate-arrow {
-						width: 50rpx;
-						height: 50rpx;
-					}
-				}
-			}
+   .cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25rpx 29rpx;
+    font-size: 26rpx;
+    line-height: 1;
 
-			.info {
-				width: 100%;
-				padding-top: 57rpx;
-				box-sizing: border-box;
-				margin-bottom: 80rpx;
+    .label {
+     color: #999999;
+    }
 
-				.info-type {
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					color: #999999;
-					font-size: 26rpx;
-					margin-bottom: 42rpx;
+    .content {
+     color: #383838;
+     display: flex;
+     align-items: center;
+
+     .content-select {
+      color: #999999;
+     }
+
+     .content-cate-icon {
+      width: 50rpx;
+      height: 50rpx;
+      margin-right: 12rpx;
+     }
+
+     .content-cate-arrow {
+      width: 50rpx;
+      height: 50rpx;
+     }
+    }
+   }
+
+   .info {
+    width: 100%;
+    padding-top: 57rpx;
+    box-sizing: border-box;
+    margin-bottom: 80rpx;
+
+    .info-type {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #999999;
+     font-size: 26rpx;
+     margin-bottom: 42rpx;
 
 
-					.info-type-icon {
-						width: 40rpx;
-						height: 40rpx;
-						margin-right: 9rpx;
+     .info-type-icon {
+      width: 44rpx;
+      height: 44rpx;
+      margin-right: 9rpx;
 
-					}
+     }
 
-				}
+    }
 
-				.info-money {
-					font-size: 50rpx;
-					color: #383838;
-					text-align: center;
-					line-height: 55rpx;
-					font-weight: 700;
-				}
-			}
-		}
-	}
+    .info-money {
+     font-size: 50rpx;
+     color: #383838;
+     text-align: center;
+     line-height: 55rpx;
+     font-weight: 700;
+    }
+   }
+  }
+ }
 </style>

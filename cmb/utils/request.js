@@ -11,8 +11,10 @@ const options = {
 	dataType: 'json',
 	header: {
 		'content-type': 'application/json',
+    'Access-Control-Allow-Origin':'*',
 	},
-	baseUrl: 'http://47.102.135.129:8001'
+  // baseUrl: 'http://api.chinajianse.com'
+	baseUrl: '/api'
 }
 
 /*
@@ -41,6 +43,7 @@ const request = (url, data = {}, loading = false, method = 'POST') => {
 			timeout: options.timeout,
 			dataType: options.dataType,
 			success: res => {
+				console.log(res, 'res----');
 				handleResponse(res, resolve, reject, loading)
 			},
 			fail: err => {

@@ -5,20 +5,20 @@
 		</navbar>
 		<view class="main"
 			:style="{backgroundImage:type==1? 'url(/static/home/account-header.png)':'url(/static/home/account-header1.png)'}">
-			<view class="account">
+			<view class="account" :style="{paddingLeft:type==1?'60rpx':'50rpx'}">
 				<view class="left">
 					<view class="big" v-show="type == 1">
-						<view class="title">总资产</view>
+						<!-- <view class="title">总资产</view> -->
 						<view class="money">
 							<view class="money-integer">{{formatAmount(numberParts(userInfo.accountBalance).integer)}}
 							</view>
 							<view class="money-decimal">.{{numberParts(userInfo.accountBalance).decimal}}</view>
 							<image class="money-icon" src="/static/icon/arrow-5.png"></image>
 						</view>
-						<view class="btn" @click="commonPages('/pages/account/income/income')">查看收益</view>
+						<view class="btn" @click="commonPages('/pages/account/income/income')"></view>
 					</view>
 					<view class="small" @click="type = 1" v-if="type == 2">
-						<view class="title small-title">总资产</view>
+						<!-- <view class="title small-title">总资产</view> -->
 						<view class="money  small-money">
 							<view class="money-integer">{{formatAmount(numberParts(userInfo.accountBalance).integer)}}
 							</view>
@@ -29,7 +29,7 @@
 				<view class="right">
 					<view class="right-small" @click="type = 2" v-if="type == 1">
 					</view>
-					<view class="right-big" v-if="type == 2">
+					<!-- <view class="right-big" v-if="type == 2">
 						<view class="right-big-title">
 							本月剩余应还
 						</view>
@@ -37,12 +37,11 @@
 							<view class="money-integer">0</view>
 							<view class="money-decimal">.00</view>
 						</view>
-					</view>
+					</view> -->
 				</view>
-
 			</view>
 			<view class="money-num" v-show="type == 1">活钱 {{formatAmount(userInfo.accountBalance)}}</view>
-			<view class="details" :style="{height:isexpand?'476rpx':'110rpx'}" v-show="type == 1">
+			<view class="details" :style="{height:isexpand?'225rpx':'110rpx'}" v-show="type == 1">
 				<view class="title">
 					<view class="label">
 						<text>直接可用</text>
@@ -56,14 +55,14 @@
 				</view>
 				<view class="item">
 					<view class="label">
-						<text>尾号6814</text>
+						<text>活期存款</text>
 					</view>
 					<view class="contet">
 						<text>{{formatAmount(userInfo.accountBalance)}}</text>
 						<image class="icon" src="/static/icon/icon10.png"></image>
 					</view>
 				</view>
-				<view class="deposit">
+				<!-- <view class="deposit">
 					<view class="item deposit-item">
 						<view class="label">
 							<text>活期存款</text>
@@ -80,8 +79,14 @@
 							<text>7日年化1.75%</text>
 						</view>
 					</view>
-				</view>
+				</view> -->
 			</view>
+      <!-- 快速赎回 -->
+      <view class="small-pages" v-show="type == 1">
+        <view class="item"
+          @click="commonPages('/pages/common/common?pageImage=/static/pages/kssh.jpg&title=朝朝盈2号&serviceBtn=false&aiBtn=true')">
+        </view>
+      </view>
 			<view class="pages" v-show="type == 1">
 				<view class="item"
 					@click="commonPages(`/pages/commonPages/commonPages?pageImage=/static/pages/mlclzh.png&title=买理财 来招行&serviceBtn=${false}`)">
@@ -121,7 +126,7 @@
 				type: 1,
 				opacity: 1,
 				money: 2025.25,
-				isexpand: true,
+				isexpand: false,
 				formatAmount: formatAmount
 			}
 		},
@@ -143,13 +148,13 @@
 		},
 		onPageScroll(e) {
 			var scrollTop = e.scrollTop;
-			if (scrollTop >= this.statusBarHeight) {
-				this.opacity = 0
-				return
-			} else if (scrollTop == 0) {
+			if (scrollTop == 0) {
 				this.opacity = 1
 				return
-			}
+			} else if(scrollTop >= this.statusBarHeight) {
+        this.opacity = 0
+				return
+      }
 			this.opacity = 1 - (scrollTop / this.statusBarHeight)
 		},
 		methods: {
@@ -211,7 +216,7 @@
 
 		.account {
 			width: 100%;
-			padding: 319rpx 0 0 70rpx;
+			padding: 319rpx 0 0 60rpx;
 			box-sizing: border-box;
 			line-height: 1;
 			display: flex;
@@ -226,7 +231,7 @@
 				display: flex;
 				color: #FFFFFF;
 				font-weight: bold;
-				margin-top: 20rpx;
+				margin-top: 50rpx;
 				font-size: 36rpx;
 				align-items: flex-end;
 
@@ -260,7 +265,6 @@
 			.btn {
 				width: 133rpx;
 				height: 50rpx;
-				background: #69738E;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -283,7 +287,7 @@
 
 		.details {
 			width: 690rpx;
-			height: 476rpx;
+			height: 225rpx;
 			background: #FFFFFF;
 			border-radius: 22rpx;
 			margin: auto;
@@ -375,6 +379,23 @@
 			}
 		}
 
+    .small-pages{
+      width: 750rpx;
+			height: 200rpx;
+			background-image: url(/static/home/account-small-pages.png);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 750rpx 200rpx;
+			padding-top: 30rpx;
+			box-sizing: border-box;
+
+      .item {
+				width: 750rpx;
+				height: 100rpx;
+				margin-bottom: 30rpx;
+			}
+    }
+
 		.pages {
 			width: 750rpx;
 			height: 1540rpx;
@@ -399,12 +420,12 @@
 
 		.pages1 {
 			width: 750rpx;
-			height: 1191rpx;
+			height: 1552rpx;
 			margin-top: 160rpx;
 			background-image: url(/static/home/account-pages1.png);
 			background-position: center;
 			background-repeat: no-repeat;
-			background-size: 750rpx 1191rpx;
+			background-size: 750rpx 1552rpx;
 		}
 	}
 </style>

@@ -5,6 +5,7 @@
 				<image class="search-icon" @click="doSearch" src="/static/icon/search@2x.png" mode=""></image>
 			</view>
 		</navbar>
+    
 		<view class="main">
 			<u-sticky :customNavHeight="statusBarHeight+navBarHeight">
 				<view class="tabs">
@@ -45,9 +46,17 @@
 									</image>
 								</view>
 							</view>
+              <view class="summary-item">
+								<view class="summary-item-momey">=</view>
+								<view class="summary-item-name" style="opacity: 0;">=</view>
+							</view>
 							<view class="summary-item">
 								<view class="summary-item-momey">{{formatAmount(item.incomeTotal)}}</view>
 								<view class="summary-item-name">收入</view>
+							</view>
+              <view class="summary-item">
+								<view class="summary-item-momey">-</view>
+								<view class="summary-item-name" style="opacity: 0;">-</view>
 							</view>
 							<view class="summary-item">
 								<view class="summary-item-momey">{{formatAmount(item.expensesTotal)}}</view>
@@ -66,9 +75,17 @@
 									</image>
 								</view>
 							</view>
+              <view class="summary-item">
+								<view class="summary-item-momey">=</view>
+								<view class="summary-item-name" style="opacity: 0;">=</view>
+							</view>
 							<view class="summary-item">
 								<view class="summary-item-momey">{{formatAmount(billRangeData.incomeTotal)}}</view>
 								<view class="summary-item-name">收入</view>
+							</view>
+              <view class="summary-item">
+								<view class="summary-item-momey">-</view>
+								<view class="summary-item-name" style="opacity: 0;">-</view>
 							</view>
 							<view class="summary-item">
 								<view class="summary-item-momey">{{formatAmount(billRangeData.expensesTotal)}}</view>
@@ -77,7 +94,7 @@
 						</view>
 					</view>
 					<!-- 账单 -->
-					<view class="bill" v-if="item.billDetail" @click="goDetails(item.billDetail)">
+					<view class="bill" v-if="item.billDetail" @click="goDetails(item.billDetail,item.icon)">
 						<view class="bill-time" v-if="item.day">
 							{{item.day}}
 						</view>
@@ -232,19 +249,20 @@
 				return (money) => {
 					let num = parseFloat(money)
 					if (num > 0) {
-						return `￥${formatAmount(num.toFixed(2))}`
+						return `+￥${formatAmount(num.toFixed(2))}`
 					} else {
 						return `-￥${formatAmount(Math.abs(num).toFixed(2))}`
 					}
 				}
 			}
+
 		},
 		onLoad() {
 			const currentDate = new Date();
 			const currentYear = currentDate.getFullYear();
 			const currentMonth = ((currentDate.getMonth() + 1) < 10) ? ('0' + currentDate.getMonth() + 1) : (currentDate
 				.getMonth() + 1)
-			this.$set(this.selectDate, 'text', `${currentYear}.${currentMonth}月`)
+			this.$set(this.selectDate, 'text', `${currentYear}.${currentMonth}`)
 			this.queryTime = this.selectDate.text.replace('.', '-').replace('月', '');
 			this.getBillPage()
 
@@ -284,9 +302,9 @@
 					url: '/pages/bill/search/search'
 				})
 			},
-			goDetails(details) {
+			goDetails(details, icon) {
 				navigateTo({
-					url: '/pages/bill/details/details?details=' + JSON.stringify(details)
+					url: `/pages/bill/details/details?details=${JSON.stringify(details)}&icon=${icon}`
 				})
 			},
 			rules() {
@@ -307,6 +325,10 @@
 			},
 			billFilter(value) {
 				this.transactionCategory = value
+				this.status = 'loading'
+				this.pageNum = 1
+				this.list = []
+				this.getBillPage()
 			},
 			timeChange(e) { // 时间选择
 				this.selectDate = e.data
@@ -315,7 +337,6 @@
 				this.list = []
 				this.activeTitle = e.activeTitle
 				this.getBillPage()
-
 			},
 			getBillPage() {
 				if (this.activeTitle == 1) {
@@ -440,7 +461,7 @@
 						color: #999999;
 						font-size: 24rpx;
 						line-height: 1;
-						padding-left: 47rpx;
+						padding-left: 55rpx;
 						box-sizing: border-box;
 
 						.bill-bottom-time {
@@ -467,9 +488,9 @@
 						}
 
 						.bill-money-icon {
-							width: 28rpx;
-							height: 28rpx;
-							margin-right: 19rpx;
+							width: 44rpx;
+							height: 44rpx;
+							margin-right: 10rpx;
 						}
 					}
 				}
