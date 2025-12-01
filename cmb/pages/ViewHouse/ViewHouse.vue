@@ -4,7 +4,7 @@
 			<view class="nav">
 				<view class="nav-content">
 					<image class="nav-icon" src="/static/icon/address-icon.png" mode=""></image>
-					<text>合肥</text>
+					<text>{{userInfo.city?userInfo.city:'北京'}}</text>
 				</view>
 				<view class="btn">关注的房</view>
 			</view>
@@ -16,12 +16,18 @@
 </template>
 
 <script>
+import {
+  mapState,
+ } from 'vuex'
 	export default {
 		data() {
 			return {
 
 			};
-		}
+		},
+		computed: {
+           ...mapState(['navBarHeight', 'statusBarHeight', 'userInfo']),
+          },
 	}
 </script>
 

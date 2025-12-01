@@ -4,7 +4,7 @@
 			<slot>
 				<view class="nav-content" :style="{height:`${navBarHeight}px`,color:opacity >0.5?'#ffffff':'#111111'}">
 					<view class="address">
-						<text>香港</text>
+						<text>{{userInfo.city?userInfo.city:'北京'}}</text>
 						<image class="address-icon"
 							:src="opacity<1?'/static/icon/greyDown.png':'/static/icon/down_bai.png'"></image>
 					</view>
@@ -85,7 +85,7 @@
 			}
 		},
 		computed: {
-			...mapState(['navBarHeight', 'statusBarHeight']),
+			...mapState(['navBarHeight', 'statusBarHeight','userInfo']),
 		},
 		onPageScroll(e) {
 			var scrollTop = e.scrollTop;
