@@ -6,7 +6,7 @@
    <view class="container">
     <view class="info">
      <view class="info-type">
-      <image class="info-type-icon" :src="icon" mode=""></image>
+      <image class="info-type-icon" :src="details.icon" mode=""></image>
       {{details.excerpt}}
      </view>
      <view class="info-money">
@@ -23,7 +23,7 @@
     </view>
     <view class="cell">
      <view class="label">收款账号</view>
-     <view class="content">{{details.oppositeAccount}}</view>
+     <view class="content">{{repeatCardNumber(details.oppositeAccount)}}</view>
     </view>
     <view class="cell" v-if="details.merchantBranch">
      <view class="label">转账附言</view>
@@ -66,8 +66,8 @@
      </view>
     </view>
    </view>
-   <view class="footer-pl"></view>
-   <view class="footer">
+   <view class="footer-pl" v-if="details.oppositeBankId"></view>
+   <view class="footer" v-if="details.oppositeBankId">
     <view class="footer-content">
      <view class="footer-btn" @click="goTransfer">给TA转账</view>
      <view class="footer-btn" @click="goRecord">查看往来记录</view>
@@ -84,12 +84,14 @@
 <script>
  import {
   formatAmount,
-  navigateTo
+  navigateTo,
+  repeatCardNumber
  } from '@/utils/index.js'
  export default {
   data() {
    return {
     details: {},
+    repeatCardNumber: repeatCardNumber,
     show: false,
     showPop: false,
     classifyPopShow: false,
@@ -103,7 +105,10 @@
   onLoad(op) {
    if (op.details) {
     this.details = JSON.parse(op.details)
-    this.icon = op.icon
+    this.classify = {
+     icon: this.details.categoryIcon,
+     name: this.details.transactionCategory
+    }
    }
   },
   computed: {
@@ -119,12 +124,15 @@
   methods: {
    goTransfer() {
     navigateTo({
-     url: '/pages/transfer/bank/bank'
+     url: '/pages/transfer/bank/bank?contactsInfoStr=' + JSON.stringify({
+      bankCard: this.details.oppositeAccount,
+      name: this.details.oppositeName
+     })
     })
    },
    goRecord() {
     navigateTo({
-     url: '/pages/transfer/record/record'
+     url: '/pages/transfer/record/record?oppositeAccount=' + this.details.oppositeAccount
     })
    },
    classifyConfirm(item) {
