@@ -181,7 +181,7 @@
 			},
 			branchBelongs() {
 				navigateTo({
-					url: `/pages/common/common?pageImage=/static/pages/wd.png&title=网点&gradient=2`
+					url: `/pages/my/wd/wd?gradient=2`
 				})
 			},
 			scheduledTransfer() {

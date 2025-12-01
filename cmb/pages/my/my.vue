@@ -116,7 +116,8 @@
 						@click="commonPages('/pages/common/common?pageImage=/static/pages/gcfq.png&title=购车分期额度&&gradient=2')">
 					</view>
 					<view class="item"
-						@click="commonPages('/pages/common/common?pageImage=/static/pages/wdwd.png&title=网点&&gradient=2')">
+            @click="commonPages('/pages/my/wd/wd?gradient=1')">
+						<!-- @click="commonPages('/pages/common/common?pageImage=/static/pages/wdwd.png&title=网点&&gradient=2')"> -->
 					</view>
 					<view class="item"
 						@click="commonPages('/pages/commonPages/commonPages?pageImage=/static/pages/sczx.png&title=收藏中心&serviceBtn=false&moreBtn=false')">

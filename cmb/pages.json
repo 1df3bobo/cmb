@@ -363,6 +363,13 @@
 				"navigationBarTitleText" : ""
 			}
 		},
+    {
+			"path" : "pages/my/wd/wd",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
 		{
 			"path" : "pages/bankCard/bankCard",
 			"style" : 

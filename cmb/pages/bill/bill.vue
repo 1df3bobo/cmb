@@ -316,12 +316,15 @@
 			moneySort() {
 				if (this.orderSort) {
 					this.orderSort = ''
+          this.getBillPage()
 					return
 				}
 				this.orderSort = '1'
+        this.getBillPage()
 			},
 			bankCardChange(value) {
 				this.bankCard = value.name
+        this.getBillPage()
 			},
 			billFilter(value) {
 				this.transactionCategory = value

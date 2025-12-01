@@ -34,10 +34,8 @@
 						v-for="(item,index) in userInfo.bankList" :key="item.bankCard">
 						<image class="user-icon" src="http://img.chinajianse.com/bank/icon/CMB.png" mode=""></image>
 						<view class="user-name bank-name">
-							<view>
-								{{item.realName}}
-							</view>
-							<view class="bank-name-text">{{item.bankName}}<text>({{item.bankCard.slice(-4)}})</text>
+							<view>招商银行</view>
+							<view class="bank-name-text">尾号<text>({{item.bankCard.slice(-4)}})</text>
 							</view>
 						</view>
 					</view>
