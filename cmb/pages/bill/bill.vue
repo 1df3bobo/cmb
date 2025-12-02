@@ -46,6 +46,9 @@
 									</image>
 								</view>
 							</view>
+							<view v-if="activeTitle == 1" class="">
+        =
+       </view>
               <view class="summary-item">
 								<view class="summary-item-momey">=</view>
 								<view class="summary-item-name" style="opacity: 0;">=</view>
@@ -54,6 +57,9 @@
 								<view class="summary-item-momey">{{formatAmount(item.incomeTotal)}}</view>
 								<view class="summary-item-name">收入</view>
 							</view>
+							<view v-if="activeTitle == 1" class="">
+        -
+       </view>
               <view class="summary-item">
 								<view class="summary-item-momey">-</view>
 								<view class="summary-item-name" style="opacity: 0;">-</view>
@@ -217,16 +223,18 @@
 			}
 		},
 		onPageScroll(e) {
-			this.list.forEach((item, index) => {
-				const query = uni.createSelectorQuery().in(this);
-				query.select('#item-' + index).boundingClientRect((rect) => {
-					if (rect.top <= 0 && rect.bottom >= 0) {
-						if (item.day) {
-							this.$set(this.selectDate, 'text', item.day)
-						}
-					}
-				}).exec();
-			});
+	if (this.activeTitle == 1) {
+    this.list.forEach((item, index) => {
+     const query = uni.createSelectorQuery().in(this);
+     query.select('#item-' + index).boundingClientRect((rect) => {
+      if (rect.top <= 0 && rect.bottom >= 0) {
+       if (item.day) {
+        this.$set(this.selectDate, 'text', item.day)
+       }
+      }
+     }).exec();
+    });
+   }
 		},
 		computed: {
 			...mapState(['userInfo', 'navBarHeight', 'statusBarHeight']),
