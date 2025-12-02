@@ -20,7 +20,7 @@
 			<view class="search">
 				<input @confirm="inputConfirm" confirm-type="search" v-model="keyword" class="search-input"
 					placeholder-class="placeholder" placeholder="输入姓名/卡号/手机号/附言搜索" type="text" />
-				<image class="icon" src="/static/icon/search-black.png" mode=""></image>
+				<image @click="inputConfirm" class="icon" src="/static/icon/search-black.png" mode=""></image>
 			</view>
 			<view class="list">
 				<view class="title">转出记录</view>
