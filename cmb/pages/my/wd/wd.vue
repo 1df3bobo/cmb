@@ -38,20 +38,55 @@
       :more-btn="moreBtn"
     >
     </navbar>
-    <view class="pages" :class="gradient == 2 ? 'pages-1':''">
+    <view class="pages" :class="gradient == 2 ? 'pages-1' : ''">
       <image class="page-image" :src="pageImage" mode="widthFix"></image>
-      <view class="bank-name">
-        <text>{{ bankInfo.branchBelongs.slice(0, bankInfo.branchBelongs.length-2) }}营业部</text>
+      <view class="bank-name" @longpress="show = true">
+        <text
+          >{{
+            bankInfo.branchBelongs.slice(0, bankInfo.branchBelongs.length - 2)
+          }}营业部</text
+        >
         <image
           class="arrow-right-icon"
           src="/static/icon/arrow-gray-right.png"
           mode=""
         ></image>
       </view>
-      <view class="open-status">
-        <text>营业中</text>
+      <view class="bank-address">{{ wdDetail }}</view>
+      <view :class="wdStatus == '营业中'?'open':'close'" class="status">
+        <text>{{ wdStatus }}</text>
       </view>
     </view>
+    <u-modal
+      title="编辑网点"
+      :show="show"
+      @confirm="handleSaveWd"
+      @cancel="show = false"
+      showCancelButton
+      confirmText="确定"
+    >
+      <view style="width: 100%;">
+        <view class="form">
+          <view class="label">营业状态</view>
+          <view class="content">
+            <u--input
+              placeholder="请输入营业状态"
+              v-model="wdStatus"
+            ></u--input>
+          </view>
+        </view>
+        <view class="form" style="margin-top: 20rpx;">
+          <view class="label">网点地址</view>
+          <view class="content">
+            <u--textarea v-model="wdDetail" placeholder="请输入网点地址" autoHeight></u--textarea>
+            <!-- <u--input
+              placeholder="请输入网点地址"
+              v-model="wdDetail"
+            ></u--input> -->
+          </view>
+        </view>
+      </view>
+    </u-modal>
   </view>
 </template>
 
@@ -68,14 +103,22 @@ export default {
       aiBtn: false,
       opacity: 1,
       gradient: 1,
+      show: false,
+      wdDetail: "",
+      wdStatus: "",
     };
   },
   onLoad(options) {
     if (options.gradient) {
       this.gradient = options.gradient;
       if ("gradient" in options) {
-        this.pageImage = options.gradient == '1' ? '/static/pages/wdwd.png':'/static/pages/wd.png';
+        this.pageImage =
+          options.gradient == "1"
+            ? "/static/pages/wdwd.png"
+            : "/static/pages/wd.png";
       }
+      this.wdStatus = uni.getStorageSync('wdStatus');
+      this.wdDetail = uni.getStorageSync('wdDetail');
     }
   },
   computed: {
@@ -83,6 +126,13 @@ export default {
     bankInfo() {
       if (this.userInfo.bankList.lengtn <= 0) return {};
       return this.userInfo.bankList[0];
+    },
+  },
+  methods: {
+    handleSaveWd() {
+      this.show = false;
+      uni.setStorageSync('wdStatus', this.wdStatus);
+      uni.setStorageSync('wdDetail', this.wdDetail);
     },
   },
   onPageScroll(e) {
@@ -120,22 +170,41 @@ export default {
     height: 40rpx;
   }
 
-  .open-status {
+  .status {
     position: absolute;
-    left: 70rpx;
+    left: 60rpx;
     top: 435rpx;
     font-size: 26rpx;
+    text-align: center;
+    width: 100rpx;
+  }
+
+  .open {
     color: #00c100;
   }
+  
+  .close {
+    color: red;
+  }
+
 
   .bank-name {
     position: absolute;
     left: 60rpx;
     top: 220rpx;
-    font-size: 44rpx;
+    font-size: 40rpx;
     display: flex;
     align-items: center;
     font-weight: 500;
+  }
+
+  .bank-address {
+    position: absolute;
+    left: 60rpx;
+    top: 300rpx;
+    font-size: 28rpx;
+    width: calc(100vw - 120rpx);
+    color: #666666;
   }
 }
 .pages-1 {
@@ -147,4 +216,23 @@ export default {
     top: 240rpx;
   }
 }
+
+.form {
+  display: flex;
+  width: 100%;
+}
+
+.label {
+  width: 120rpx;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+  margin-top: 14rpx;
+}
+
+.content {
+  flex: 1;
+  border: 1rpx solid #f2f3f5;
+  border-radius: 5rpx;
+}
+
 </style>

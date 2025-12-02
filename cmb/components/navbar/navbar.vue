@@ -4,15 +4,17 @@
 		<div v-if="placeholder" :style="{width:'100%',height:`${navBarHeight+statusBarHeight}px`}"></div>
 		<div class="nav"
 			:style="{backgroundColor:bgColor,backgroundImage:bgImage,opacity: opacity,height:`${navBarHeight+statusBarHeight}px`}">
-			<!--      导航栏-->
+			<!-- 导航栏-->
 			<div class="nav-bar"
 				:style="{paddingTop:`${statusBarHeight}px`,height: `${navBarHeight+statusBarHeight}px`,justifyContent:justifyContent, paddingLeft:justifyContent!=='center'?'88rpx':0}">
 				<div :style="{height: `${navBarHeight}px`}" v-if="showBack" class="nav-back">
-					<image class="nav-back-icon" :src="leftIcon" @click="goBack" alt="">
+					<image class="nav-back-icon" :src="leftIcon" @click="goBack" alt="" />
 				</div>
 				<div :style="{color:titleColor}" class="nav-title" v-text="title"></div>
 				<slot></slot>
 				<view class="nav-right">
+          <!-- 分享按钮 -->
+					<image v-if="shareBtn" class="nav-icon" :src="shareBtnIcon"></image>
 					<!-- ai按钮 -->
 					<image @click="goCustomer" v-if="aiBtn" class="nav-icon" :src="aiBtnIcon"></image>
 					<!-- 客服按钮 -->
@@ -78,6 +80,14 @@
 			moreBtnIcon: {
 				type: String,
 				default: '/static/icon/icon3.png'
+			},
+      shareBtn: {
+				type: Boolean,
+				default: false
+			},
+			shareBtnIcon: {
+				type: String,
+				default: '/static/icon/icon4.png'
 			},
 			showBack: { // 是否展示左侧返回按钮
 				type: Boolean,
