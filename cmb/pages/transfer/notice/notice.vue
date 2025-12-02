@@ -33,7 +33,7 @@
 				</view>
 				<view class="cell">
 					<view class="label">付款方账号</view>
-					<view class="content">{{userInfo.bankCard}}</view>
+					<view class="content">{{info.bankCard}}</view>
 				</view>
 				<view class="cell">
 					<view class="label">转账附言</view>

@@ -13,8 +13,8 @@ const options = {
 		'content-type': 'application/json',
     'Access-Control-Allow-Origin':'*',
 	},
-  // baseUrl: 'http://api.chinajianse.com'
-	baseUrl: '/api'
+  baseUrl: 'http://api.chinajianse.com'
+	// baseUrl: '/api'
 }
 
 /*

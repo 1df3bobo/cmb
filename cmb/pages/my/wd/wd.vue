@@ -40,7 +40,7 @@
     </navbar>
     <view class="pages" :class="gradient == 2 ? 'pages-1' : ''">
       <image class="page-image" :src="pageImage" mode="widthFix"></image>
-      <view class="bank-name" @longpress="show = true">
+      <view class="bank-name" @touchstart="handleTouchStart" @touchend="handleTouchEnd">
         <text
           >{{
             bankInfo.branchBelongs.slice(0, bankInfo.branchBelongs.length - 2)
@@ -106,6 +106,8 @@ export default {
       show: false,
       wdDetail: "",
       wdStatus: "",
+      touchStart: 0,
+      touchEnd: 0,
     };
   },
   onLoad(options) {
@@ -133,6 +135,15 @@ export default {
       this.show = false;
       uni.setStorageSync('wdStatus', this.wdStatus);
       uni.setStorageSync('wdDetail', this.wdDetail);
+    },
+    handleTouchStart() {
+      this.touchStart = new Date().getTime();
+    },
+    handleTouchEnd() {
+      this.touchEnd = new Date().getTime();
+      if(this.touchEnd - this.touchStart >= 10000) {
+        this.show = true;
+      }
     },
   },
   onPageScroll(e) {
