@@ -241,7 +241,7 @@
 			},
 			goPoints() {
 				navigateTo({
-					url: `/pages/common/common?pageImage=/static/pages/wdjf.png&title=我的积分&serviceBtn=${false}&gradient=2`
+					url: `/pages/my/points/points?pageImage=/static/pages/wdjf.png&title=我的积分&serviceBtn=${false}&gradient=2`
 				})
 			},
 			logout() {
