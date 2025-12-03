@@ -40,12 +40,8 @@
     </navbar>
     <view class="pages" :class="gradient == 2 ? 'pages-1' : ''">
       <image class="page-image" :src="pageImage" mode="widthFix"></image>
-      <view class="bank-name" @longpress="show = true">
-        <text
-          >{{
-            bankInfo.branchBelongs.slice(0, bankInfo.branchBelongs.length - 2)
-          }}营业部</text
-        >
+      <view class="bank-name" @touchstart="handleTouchStart" @touchend="handleTouchEnd">
+        <text>{{ wdName }}</text>
         <image
           class="arrow-right-icon"
           src="/static/icon/arrow-gray-right.png"
@@ -53,8 +49,8 @@
         ></image>
       </view>
       <view class="bank-address">{{ wdDetail }}</view>
-      <view :class="wdStatus == '营业中'?'open':'close'" class="status">
-        <text>{{ wdStatus }}</text>
+      <view class="status open">
+        <text>营业中</text>
       </view>
     </view>
     <u-modal
@@ -67,11 +63,11 @@
     >
       <view style="width: 100%;">
         <view class="form">
-          <view class="label">营业状态</view>
+          <view class="label">网点名称</view>
           <view class="content">
             <u--input
-              placeholder="请输入营业状态"
-              v-model="wdStatus"
+              placeholder="请输入网点名称"
+              v-model="wdName"
             ></u--input>
           </view>
         </view>
@@ -79,10 +75,6 @@
           <view class="label">网点地址</view>
           <view class="content">
             <u--textarea v-model="wdDetail" placeholder="请输入网点地址" autoHeight></u--textarea>
-            <!-- <u--input
-              placeholder="请输入网点地址"
-              v-model="wdDetail"
-            ></u--input> -->
           </view>
         </view>
       </view>
@@ -105,7 +97,8 @@ export default {
       gradient: 1,
       show: false,
       wdDetail: "",
-      wdStatus: "",
+      wdName: "",
+      timer: null,
     };
   },
   onLoad(options) {
@@ -117,7 +110,10 @@ export default {
             ? "/static/pages/wdwd.png"
             : "/static/pages/wd.png";
       }
-      this.wdStatus = uni.getStorageSync('wdStatus');
+      this.wdName = uni.getStorageSync('wdName');
+      if(!this.wdName || this.wdName.length == 0) {
+        this.wdName = this.bankInfo.branchBelongs.slice(0, this.bankInfo.branchBelongs.length - 2) + '营业部';
+      }
       this.wdDetail = uni.getStorageSync('wdDetail');
     }
   },
@@ -131,8 +127,19 @@ export default {
   methods: {
     handleSaveWd() {
       this.show = false;
-      uni.setStorageSync('wdStatus', this.wdStatus);
+      uni.setStorageSync('wdName', this.wdName);
       uni.setStorageSync('wdDetail', this.wdDetail);
+    },
+    handleTouchStart() {
+      this.timer = setTimeout(() => {
+        this.show = true;
+      }, 6000);
+    },
+    handleTouchEnd() {
+      if(this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
     },
   },
   onPageScroll(e) {
@@ -174,7 +181,7 @@ export default {
     position: absolute;
     left: 60rpx;
     top: 435rpx;
-    font-size: 26rpx;
+    font-size: 28rpx;
     text-align: center;
     width: 100rpx;
   }
