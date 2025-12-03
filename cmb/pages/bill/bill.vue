@@ -52,7 +52,7 @@
             v-if="
               activeTitle == 1 &&
               item.month &&
-              (Math.abs(item.incomeTotal) > 0 || Math.abs(item.expensesTotal))
+              (Math.abs(item.incomeTotal) > 0 || Math.abs(item.expensesTotal) > 0)
             "
           >
             <view class="title">
@@ -114,18 +114,10 @@
                 </view>
               </view>
               <view class="summary-item">
-                <view class="summary-item-momey">=</view>
-                <view class="summary-item-name" style="opacity: 0">=</view>
-              </view>
-              <view class="summary-item">
                 <view class="summary-item-momey">{{
                   formatAmount(billRangeData.incomeTotal)
                 }}</view>
                 <view class="summary-item-name">收入</view>
-              </view>
-              <view class="summary-item">
-                <view class="summary-item-momey">-</view>
-                <view class="summary-item-name" style="opacity: 0">-</view>
               </view>
               <view class="summary-item">
                 <view class="summary-item-momey">{{
@@ -573,6 +565,7 @@ export default {
           .bill-money {
             margin-left: auto;
             font-size: 32rpx;
+            flex-shrink: 0;
           }
 
           .bill-money-icon {
