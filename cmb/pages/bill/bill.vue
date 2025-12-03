@@ -386,7 +386,9 @@
 					}).then((res) => {
 						if (res.code === 200) {
 							this.list = [...this.list, ...res.data.list]
-							this.billRangeData = res.data
+						if(this.pageNum <=1){
+                                this.billRangeData = res.data
+                               }
 							this.totalPage = res.data.pages
 							if (res.data.list.length > 0) {
 								this.endPageTime = res.data.list[res.data.list.length - 1].transactionTime
