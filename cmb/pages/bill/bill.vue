@@ -100,7 +100,7 @@
 						</view>
 					</view>
 					<!-- 账单 -->
-					<view class="bill" v-if="item.billDetail" @click="goDetails(item.billDetail,item.icon)">
+					<view class="bill" v-if="item.billDetail" @click="goDetails(item,item.icon)">
 						<view class="bill-time" v-if="item.day">
 							{{item.day}}
 						</view>
@@ -310,7 +310,9 @@
 					url: '/pages/bill/search/search'
 				})
 			},
-			goDetails(details, icon) {
+			goDetails(item, icon) {
+        const details = item.billDetail;
+        details.amount = item.amount;
 				navigateTo({
 					url: `/pages/bill/details/details?details=${JSON.stringify(details)}&icon=${icon}`
 				})

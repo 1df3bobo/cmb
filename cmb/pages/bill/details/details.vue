@@ -115,7 +115,7 @@
    momneyStr() {
     let num = parseFloat(this.details.amount)
     if (num > 0) {
-     return `￥${formatAmount(num.toFixed(2))}`
+     return `+￥${formatAmount(num.toFixed(2))}`
     } else {
      return `-￥${formatAmount(Math.abs(num).toFixed(2))}`
     }

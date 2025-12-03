@@ -18,7 +18,7 @@
 			<view class="recent">
 				<view class="recent-title">
 					<view class="recent-title-left">最近转账伙伴</view>
-					<view class="recent-title-right">全部 {{ userInfo.bankList.length + contactsList.length }}</view>
+					<view class="recent-title-right" @click="goContactList">全部 {{ userInfo.bankList.length + contactsList.length }}</view>
 				</view>
 				<view class="list">
 					<view :class="['item',!isMoreList?'border':'']" @click="isMoreList = !isMoreList">
@@ -150,6 +150,11 @@
 						url: `${item.path}?pageImage=${item.page}&title=${item.name}&bgColor=${item.bgColor?item.bgColor:''}`
 					})
 				}
+			},
+      goContactList() {
+				navigateTo({
+					url: '/pages/transfer/contactList/contactList?mine=true'
+				})
 			},
 			// 获取最近转账伙伴 
 			getContactsList() {

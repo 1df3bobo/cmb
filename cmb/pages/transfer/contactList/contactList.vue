@@ -1,6 +1,6 @@
 <template>
 	<view class="app">
-		<navbar title="选择转账伙伴" title-color="#333333" bg-color="#F8F8F8">
+		<navbar :title="navTitle" title-color="#333333" bg-color="#F8F8F8">
 			<slot>
 				<view class="nav-content">
 					<text>批量删除</text>
@@ -26,11 +26,20 @@
 				<view class="item" @click="isMoreList = !isMoreList">
 					<image class="user-icon" src="/static/transfer/user-icon.png" mode=""></image>
 					<view class="user-name">{{userInfo.realName}}</view>
-					<view class="user-num">0</view>
-					<image :class="['user-arrow',isMoreList?'user-arrow-acitive':'']" src="/static/icon/arrow-top.png"
+					<view class="user-num">{{ userInfo.bankList.length }}</view>
+					<image :class="['user-arrow',!isMoreList?'user-arrow-acitive':'']" src="/static/icon/arrow-top.png"
 						mode="">
 					</image>
 				</view>
+        <view style="padding-left: 98rpx;" v-if="isMoreList" class="item mine border" @click="mineShortcut(item)"
+						v-for="(item,index) in userInfo.bankList" :key="item.bankCard">
+						<image class="user-icon" src="http://img.chinajianse.com/bank/icon/CMB.png" mode=""></image>
+						<view class="user-name bank-name">
+							<view>招商银行</view>
+							<view class="bank-name-text">尾号<text>({{item.bankCard.slice(-4)}})</text>
+							</view>
+						</view>
+					</view>
 				<view class="contacts-list">
 					<view class="contacts-item" v-for="(item,index) in groupedNames" :key="index">
 						<view class="title">{{item.letter}}</view>
@@ -69,6 +78,7 @@
 	export default {
 		data() {
 			return {
+        navTitle: '选择转账伙伴',
 				contactsList: [],
 				groupedNames: [],
 				isMoreList: false,
@@ -82,7 +92,10 @@
 				}]
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+      if(options.mine) {
+        this.navTitle = '我的转账伙伴'
+      }
 			this.getContactsList()
 		},
 		computed: {

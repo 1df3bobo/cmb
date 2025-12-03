@@ -29,7 +29,7 @@
 								<view class="money-decimal">.{{numberParts(userInfo.accountBalance).decimal}}</view>
 							</view>
 							<view v-else>******</view>
-							<image @click="moneyState =!moneyState" class="money-icon"
+							<image @click="moneyState =!moneyState" :class="moneyState ? 'open-icon':'title-icon'"
 								:src="moneyState?'/static/icon/icon2.png':'/static/icon/icon1.png'">
 							</image>
 						</view>
@@ -279,10 +279,17 @@
 					}
 				}
 
-				.money-icon {
+				.open-icon {
 					width: 44rpx;
-					height: 44rpx;
+					height: 34rpx;
 					margin-left: 13rpx;
+				}
+
+        .title-icon {
+					width: 40rpx;
+					height: 26rpx;
+					margin-left: 13rpx;
+          margin-top: -6rpx;
 				}
 			}
 

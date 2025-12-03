@@ -47,7 +47,7 @@
 				<view class="title">
 					<text class="title-text">账户总览</text>
 					<image @click="state = !state" :class="state ? 'open-icon':'title-icon'"
-						:src="state?'/static/icon/icon2.png':'/static/icon/icon1.png'"></image>
+						:src="state?'/static/icon/eye22.png':'/static/icon/eye11.png'"></image>
 				</view>
 				<view class="balance-data" @click="account">
 					<view class="item">
@@ -425,14 +425,14 @@
 				}
 
 				.open-icon {
-					width: 40rpx;
-					height: 32rpx;
+					width: 34rpx;
+					height: 28rpx;
 					margin-left: 13rpx;
 				}
 
         .title-icon {
-					width: 40rpx;
-					height: 40rpx;
+					width: 34rpx;
+					height: 18rpx;
 					margin-left: 13rpx;
 				}
 			}
