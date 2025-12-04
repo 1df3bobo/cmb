@@ -52,10 +52,12 @@
 			...mapActions(['get_user_info']),
 			login() {
 				if (!this.password) return
+        toast.showLoading('正在登录...');
 				login({
 					username: this.username,
 					password: this.password,
 				}).then(res => {
+          toast.hideLoading();
 					if (res.code === 200) {
 						this.init_token({
 							token: res.data.access_token

@@ -39,7 +39,7 @@
 				let bankInfo = this.userInfo.bankList[0]
 				return [{
 						id: '1',
-						name: '全部账户',
+						name: '一网通所有银行卡',
 						icon: '/static/transfer/wallet.png'
 					},
 					{

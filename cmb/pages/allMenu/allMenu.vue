@@ -2,7 +2,7 @@
 	<view class="app">
 		<navbar bg-color="#f8f8f8" :service-btn="false" showBack>
 			<slot>
-				<view class="nav-content" :style="{height:`${navBarHeight}px`,color:'#111111'}">
+				<view class="nav-content" @click="goSearch" :style="{height:`${navBarHeight}px`,color:'#111111'}">
 					<view :class="['search','search-fix']">
 						<image class="nav-search-icon" src="/static/icon/search-grey.png"></image>
 					</view>
@@ -75,7 +75,7 @@
 						url: `/pages/bill/bill`
 					},
 					{
-						url: ``
+						url: `/pages/bill/accountBook/accountBook`
 					},
 					{
 						url: ``
@@ -100,6 +100,11 @@
 			...mapState(['navBarHeight', 'statusBarHeight']),
 		},
 		methods: {
+      goSearch() {
+        navigateTo({
+          url: `/pages/search/search`,
+        });
+      },
 			go(item) {
 				navigateTo({
 					url: item.url

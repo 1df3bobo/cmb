@@ -43,7 +43,6 @@ const request = (url, data = {}, loading = false, method = 'POST') => {
 			timeout: options.timeout,
 			dataType: options.dataType,
 			success: res => {
-				console.log(res, 'res----');
 				handleResponse(res, resolve, reject, loading)
 			},
 			fail: err => {

@@ -59,6 +59,9 @@
 			</view>
 			<view class="tips-txt">将根据转账信息预计到账时间</view>
 			<view class="btn" @click="submit">下一步</view>
+      <view class="desc">安全提示</view>
+      <view class="desc">1、为了您的资金安全，切莫相信以<text style="color: #ECA068;">冒充公检法、领导或亲人朋友、或以取消“百万保障”、刷单、网购退款、快递理赔、鼓吹大额投资理财等</text>理由要求进行的转账汇款，谨防诈骗，并请您务必<text style="color: #ECA068;">确认收款人身份及转账事由</text>。</view>
+      <view class="desc">2、不扫描<text style="color: #ECA068;">可疑二维码</text>、不安装<text style="color: #ECA068;">不明App软件</text>、妥善保管卡号、<text style="color: #ECA068;">密码、短信验证码</text>等重要信息。</view>
 		</view>
 		<selectPayCardPop :show="selectPayCardPopShow" @close="selectPayCardPopShow =false"></selectPayCardPop>
 		<payPasswordPop :contactsInfo="contactsInfo" :money="money" :purpose="purpose"
@@ -79,6 +82,7 @@
 		navigateTo
 	} from '@/utils/index.js'
 	import toast from '../../../utils/toast'
+import { Text } from 'vue';
 	export default {
 		data() {
 			return {
@@ -330,7 +334,14 @@
 			justify-content: center;
 			color: #FFFFFF;
 			font-size: 34rpx;
+      margin-bottom: 80rpx;
 		}
+
+    .desc {
+      padding: 0 30rpx;
+      color: #9C9C9C;
+			font-size: 28rpx;
+    }
 
 		.border-none {
 			border: none;

@@ -12,9 +12,10 @@
 			</slot>
 		</navbar>
 		<view class="pages" v-if="resultContent">
-			<view class="content" @click="go">
-
-			</view>
+			<view class="content" @click="go('path')"></view>
+      <view class="function one" @click="go('function1')"></view>
+      <view class="function two" @click="go('function2')"></view>
+      <view class="function three" @click="go('function3')"></view>
 			<image class="pages-image" :src="resultContent.image" mode="widthFix"></image>
 		</view>
 	</view>
@@ -42,19 +43,28 @@
 				if (value.includes("转账")) {
 					resultContent = {
 						path: '/pages/transfer/index/index',
-						image: '/static/pages/search-zz.png'
+						image: '/static/pages/search-zz.png',
+            function1: '/pages/transfer/bank/bank',
+            function2: '/pages/transfer/settings/settings',
+            function3: '/pages/transfer/index/index'
 					}
 				}
 				if (value.includes("收支")) {
 					resultContent = {
 						path: '/pages/bill/bill',
-						image: '/static/pages/search-sz.png'
+						image: '/static/pages/search-sz.png',
+            function1: '/pages/bill/bill',
+            function2: '/pages/bill/analysis/analysis',
+            function3: '/pages/bill/bill'
 					}
 				}
 				if (value.includes("流水")) {
 					resultContent = {
 						path: '/pages/water/water/water',
-						image: '/static/pages/search-ls.png'
+						image: '/static/pages/search-ls.png',
+            function1: '/pages/water/applyRecord/applyRecord',
+            function2: '/pages/water/auth/auth',
+            function3: '/pages/water/water/water'
 					}
 				}
 				this.resultContent = resultContent
@@ -64,11 +74,11 @@
 			...mapState(['navBarHeight', 'statusBarHeight']),
 		},
 		methods: {
-			go() {
+			go(path) {
 				navigateTo({
-					url: this.resultContent.path
+					url: this.resultContent[path]
 				})
-			}
+			},
 		}
 	}
 </script>
@@ -85,9 +95,30 @@
 			top: 200rpx;
 			left: 0;
 			height: 300rpx;
-
 			z-index: 10;
 		}
+
+    .function {
+      width: 100%;
+			position: absolute;
+			top: 580rpx;
+			left: 0;
+			height: 120rpx;
+      z-index: 10;
+
+      &.one {
+        top: 580rpx;
+      }
+
+      &.two {
+        top: 720rpx;
+      }
+
+      &.three {
+        top: 850rpx;
+      }
+
+    }
 
 		.pages-image {
 			width: 750rpx;

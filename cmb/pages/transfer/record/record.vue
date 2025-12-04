@@ -75,7 +75,7 @@
 				timePopShow: false,
 				selectBank: { // 默认选择的银行卡
 					id: '1',
-					name: '全部账户',
+					name: '一网通所有银行卡',
 					icon: '/static/transfer/wallet.png'
 				},
 				pageNum: 1,

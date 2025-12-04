@@ -91,6 +91,10 @@
 						</view>
 					</view>
 				</view>
+        <view class="progress">
+          <view class="progress-left" :style="{ width: `${proressLeftLength}%` }"></view>
+          <view class="progress-right" :style="{ width: `${100 - proressLeftLength}%` }"></view>
+        </view>
 			</view>
 			<view class="pages">
 				<view class="card1">
@@ -183,7 +187,11 @@
 					return realName;
 				}
 				return realName.slice(0, -1).replace(/./g, '*') + realName.slice(-1);
-			}
+			},
+      proressLeftLength() {
+        const total = (this.userInfo.expensesTotal || 0) + (this.userInfo.incomeTotal || 0);
+        return (this.userInfo.expensesTotal || 0)/total*100;
+      }
 		},
 		onPageScroll(e) {
 			var scrollTop = e.scrollTop;
@@ -500,16 +508,16 @@
 			box-sizing: border-box;
 			position: relative;
 
-			&:before {
-				content: '';
-				position: absolute;
-				left: 50%;
-				transform: translateX(-50%);
-				bottom: 58rpx;
-				width: 629rpx;
-				height: 2rpx;
-				background-color: #FFAE2F;
-			}
+			// &:before {
+			// 	content: '';
+			// 	position: absolute;
+			// 	left: 50%;
+			// 	transform: translateX(-50%);
+			// 	bottom: 58rpx;
+			// 	width: 629rpx;
+			// 	height: 2rpx;
+			// 	background-color: #FFAE2F;
+			// }
 
 			.title {
 				display: flex;
@@ -519,6 +527,28 @@
 				font-weight: bold;
 				position: relative;
 			}
+
+      .progress {
+        position: absolute;
+        bottom: 58rpx;
+        width: 629rpx;
+        height: 2rpx;
+        background-color: #f8f8f8;
+        left: 50%;
+				transform: translateX(-50%);
+        display: flex;
+
+        .progress-left {
+          background-color: #FFAE2F;
+          height: 100%;
+        }
+
+        .progress-right {
+          background-color: #9189EF;
+          height: 100%;
+        }
+      }
+
 		}
 
 
