@@ -289,7 +289,8 @@
 			filterHeader() {
 				return (item, index) => {
 					if (this.activeTitle === 1) {
-						return item.month
+						return (item.month &&
+							(Math.abs(item.incomeTotal) > 0 || Math.abs(item.expensesTotal) > 0))
 					} else {
 						return index == 0
 					}
