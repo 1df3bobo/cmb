@@ -5,7 +5,6 @@
 				<image class="search-icon" @click="doSearch" src="/static/icon/search@2x.png" mode=""></image>
 			</view>
 		</navbar>
-
 		<view class="main">
 			<u-sticky :customNavHeight="statusBarHeight + navBarHeight">
 				<view class="tabs">
@@ -20,7 +19,7 @@
 					<view :class="['item', orderSort ? 'active' : '']" @click="moneySort">
 						<text>按金额</text>
 					</view>
-					<view class="item filter" @click="billFilterShow = true">
+					<view :class="['item', 'filter' ,transactionCategory?'active':'']" @click="billFilterShow = true">
 						<text>筛选</text>
 					</view>
 				</view>
@@ -28,81 +27,114 @@
 			<view class="list">
 				<view class="item" :id="'item-' + index" :ref="'item-' + index" v-for="(item, index) in list"
 					:key="index">
-					<!-- 月份头部总结 -->
-					<view class="header" :style="{height:item.categoryList?'324rpx':'242rpx'}" v-if="
-              activeTitle == 1 &&
-              item.month &&
-              (Math.abs(item.incomeTotal) > 0 || Math.abs(item.expensesTotal) > 0)
-            ">
-						<view class="title">
-							<text class="title-txt">{{ convertMonth(item.month) }}</text>
-							<text>月</text>
-						</view>
-						<view class="analysis-btn" @click="goAnalysis(item)">分析</view>
-						<view class="summary">
-							<view class="summary-item">
-								<view class="summary-item-momey">{{ balanceStr(item) }}</view>
-								<view class="summary-item-name">
-									<text>结余</text>
-									<image @click="rules" class="summary-item-icon"
-										src="/static/home/bill-info-icon.png" mode="">
-									</image>
+					<view v-if="transactionCategory&&filterHeader(item,index)">
+						<view :class="['header', 'header-2',activeTitle ==2?'header-3':''] ">
+							<view class="title" v-if="activeTitle === 1">
+								<text class="title-txt">{{ convertMonth(item.month)}}</text>
+								<text>月</text>
+							</view>
+							<view class="analysis-btn" v-if="activeTitle === 1" @click="goAnalysis(item)">分析</view>
+							<view class="summary" v-if="activeTitle === 1">
+								<view class="summary-item summary-item-text" v-if="Math.abs(item.expensesTotal)>0">
+									<view class="summary-item-name">支出</view>
+									<view class="summary-item-momey">￥{{ formatAmount(item.expensesTotal)}}</view>
+								</view>
+								<view class="summary-item summary-item-text" v-if="Math.abs(item.incomeTotal)>0">
+									<view class="summary-item-name">收入</view>
+									<view class="summary-item-momey">￥{{ formatAmount(item.incomeTotal) }}</view>
 								</view>
 							</view>
-							<view class="summary-item">
-								<view class="summary-item-momey">=</view>
-								<view class="summary-item-name" style="opacity: 0">=</view>
+							<view class="summary" v-else>
+								<view class="summary-item " v-if="Math.abs(billRangeData.expensesTotal)>0">
+									<view class="summary-item-momey">￥{{ formatAmount(billRangeData.expensesTotal)}}
+									</view>
+									<view class="summary-item-name">支出</view>
+								</view>
+								<view class="summary-item" v-if="Math.abs(billRangeData.incomeTotal)>0">
+									<view class="summary-item-momey">￥{{ formatAmount(billRangeData.incomeTotal) }}
+									</view>
+									<view class="summary-item-name">收入</view>
+								</view>
 							</view>
-							<view class="summary-item">
-								<view class="summary-item-momey">{{
-                  formatAmount(item.incomeTotal)
-                }}</view>
-								<view class="summary-item-name">收入</view>
-							</view>
-							<view class="summary-item">
-								<view class="summary-item-momey">-</view>
-								<view class="summary-item-name" style="opacity: 0">-</view>
-							</view>
-							<view class="summary-item">
-								<view class="summary-item-momey">{{
-                  formatAmount(item.expensesTotal)
-                }}</view>
-								<view class="summary-item-name">支出</view>
-							</view>
-						</view>
-						<view class="tips" v-if="item.categoryList">
-							本月支出主要花在<view>
-								<text>{{removeFirstElement(item.categoryList)}}</text>
-							</view>,
-							共计<view>
-								<text>{{item.consumeAmount}}元</text>
-							</view>。
 						</view>
 					</view>
-					<view class="header header_1" v-if="activeTitle == 2 && index == 0">
-						<view class="summary">
-							<view class="summary-item">
-								<view class="summary-item-momey">{{
-                  balanceStr(billRangeData)
-                }}</view>
-								<view class="summary-item-name">
-									<text>结余</text>
-									<image @click="rules" class="summary-item-icon"
-										src="/static/home/bill-info-icon.png" mode="">
-									</image>
+					<view v-else>
+						<!-- 月份头部总结 -->
+						<view class="header" :style="{height:item.categoryList?'324rpx':'242rpx'}" v-if="
+						  activeTitle == 1 &&
+						  item.month &&
+						  (Math.abs(item.incomeTotal) > 0 || Math.abs(item.expensesTotal) > 0)
+						">
+							<view class="title">
+								<text class="title-txt">{{ convertMonth(item.month) }}</text>
+								<text>月</text>
+							</view>
+							<view class="analysis-btn" @click="goAnalysis(item)">分析</view>
+							<view class="summary">
+								<view class="summary-item">
+									<view class="summary-item-momey">{{ balanceStr(item) }}</view>
+									<view class="summary-item-name">
+										<text>结余</text>
+										<image @click="rules" class="summary-item-icon"
+											src="/static/home/bill-info-icon.png" mode="">
+										</image>
+									</view>
+								</view>
+								<view class="summary-item">
+									<view class="summary-item-momey">=</view>
+									<view class="summary-item-name" style="opacity: 0">=</view>
+								</view>
+								<view class="summary-item">
+									<view class="summary-item-momey">{{
+						      formatAmount(item.incomeTotal)
+						    }}</view>
+									<view class="summary-item-name">收入</view>
+								</view>
+								<view class="summary-item">
+									<view class="summary-item-momey">-</view>
+									<view class="summary-item-name" style="opacity: 0">-</view>
+								</view>
+								<view class="summary-item">
+									<view class="summary-item-momey">{{
+						      formatAmount(item.expensesTotal)
+						    }}</view>
+									<view class="summary-item-name">支出</view>
 								</view>
 							</view>
-							<view class="summary-item">
-								<view class="summary-item-momey">{{
-                  formatAmount(billRangeData.incomeTotal)
-                }}</view>
-								<view class="summary-item-name">收入</view>
+							<view class="tips" v-if="item.categoryList">
+								本月支出主要花在<view>
+									<text>{{removeFirstElement(item.categoryList)}}</text>
+								</view>,
+								共计<view>
+									<text>{{item.consumeAmount}}元</text>
+								</view>。
 							</view>
-							<view class="summary-item">
-								<view class="summary-item-momey">{{
-                  formatAmount(billRangeData.expensesTotal)
-                }}</view>
-								<view class="summary-item-name">支出</view>
+						</view>
+						<view class="header header_1" v-if="activeTitle == 2 && index == 0">
+							<view class="summary">
+								<view class="summary-item">
+									<view class="summary-item-momey">{{
+						      balanceStr(billRangeData)
+						    }}</view>
+									<view class="summary-item-name">
+										<text>结余</text>
+										<image @click="rules" class="summary-item-icon"
+											src="/static/home/bill-info-icon.png" mode="">
+										</image>
+									</view>
+								</view>
+								<view class="summary-item">
+									<view class="summary-item-momey">{{
+						      formatAmount(billRangeData.incomeTotal)
+						    }}</view>
+									<view class="summary-item-name">收入</view>
+								</view>
+								<view class="summary-item">
+									<view class="summary-item-momey">{{
+						      formatAmount(billRangeData.expensesTotal)
+						    }}</view>
+									<view class="summary-item-name">支出</view>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -254,6 +286,16 @@
 		},
 		computed: {
 			...mapState(["userInfo", "navBarHeight", "statusBarHeight"]),
+			filterHeader() {
+				return (item, index) => {
+					if (this.activeTitle === 1) {
+						return item.month
+					} else {
+						return index == 0
+					}
+				}
+
+			},
 			convertMonth() {
 				return (monthString) => {
 					return parseInt(monthString, 10);
@@ -262,7 +304,7 @@
 			removeFirstElement() {
 				return (str) => {
 					let arr = str.split(','); // 将字符串按分隔符转换为数组
-					return arr[0]; // 返回处理后的数组
+					return arr[0]; // 返回处理后的数组	
 				}
 			},
 			balanceStr() {
@@ -361,6 +403,7 @@
 			},
 			billFilter(value) {
 				this.transactionCategory = value;
+				this.totalKeyList = ''
 				this.status = "loading";
 				this.pageNum = 1;
 				this.list = [];
@@ -604,6 +647,15 @@
 					background-image: url(/static/home/shouzhi_bg.png);
 				}
 
+				&.header-2 {
+					height: 198rpx;
+				}
+
+				&.header-3 {
+					height: 188rpx;
+					padding: 60rpx 150rpx 0 54rpx;
+				}
+
 				.title {
 					font-size: 36rpx;
 					font-weight: 700;
@@ -639,6 +691,19 @@
 								height: 27rpx;
 								margin-left: 10rpx;
 							}
+						}
+					}
+
+					.summary-item-text {
+						display: flex;
+						flex-direction: row;
+						align-items: center;
+
+						.summary-item-name {
+							display: flex;
+							align-items: center;
+							margin-top: 0;
+							margin-right: 20rpx;
 						}
 					}
 				}
@@ -749,6 +814,10 @@
 			}
 
 			&.active {
+				color: #2f6ee5;
+			}
+
+			.transactionCategory {
 				color: #2f6ee5;
 			}
 
