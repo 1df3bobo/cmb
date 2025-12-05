@@ -146,31 +146,60 @@
         </view>
         <view class="cateogry-list">
           <view class="row" v-for="(item, index) in chunkedItems" :key="index">
-            <view
-              class="item"
-              @click="cateogryList(subItem)"
-              v-for="(subItem, subIndex) in item"
-              :key="subIndex"
-              :style="{
-                width: calculateWidth(item.length) + 'rpx',
-                marginRight: subIndex < item.length - 1 ? '20rpx' : '0',
-              }"
-            >
-              <image :src="subItem.categoryIcon" class="icon" />
-              <view>{{ subItem.name }}</view>
+            <!-- 如果有多个对比 -->
+            <template v-if="item.length > 1">
               <view
-                v-if="switchValue"
+                class="item"
+                @click="cateogryList(subItem)"
+                v-for="(subItem, subIndex) in item"
+                :key="subIndex"
                 :style="{
-                  color: subItem.upTotalAmount > 0 ? '#E74A55' : '#4CAB5A',
+                  width: calculateWidth(item.length) + 'rpx',
+                  marginRight: subIndex < item.length - 1 ? '20rpx' : '0',
                 }"
               >
-                {{ subItem.upTotalAmount > 0 ? "+" : ""
-                }}{{ formatMoney(subItem.upTotalAmount) }}
+                <image :src="subItem.categoryIcon" class="icon" />
+                <view>{{ subItem.name }}</view>
+                <view
+                  v-if="switchValue"
+                  :style="{
+                    color: '#E74A55',
+                  }"
+                >
+                  {{ subItem.upTotalAmount > 0 ? "+" : ""
+                  }}{{ formatMoney(subItem.upTotalAmount) }}
+                </view>
+                <view v-else>
+                  {{ formatMoney(subItem.totalAmount) }}
+                </view>
               </view>
-              <view v-else>
-                {{ formatMoney(subItem.totalAmount) }}
+            </template>
+            <!-- 只有一个就显示一行就行 -->
+            <template v-else>
+              <view
+                class="single"
+                @click="cateogryList(subItem)"
+                v-for="(subItem, subIndex) in item"
+                :key="subIndex"
+              >
+              <view>
+                <image :src="subItem.categoryIcon" class="icon" />
+                <view>{{ subItem.name }}</view>
               </view>
-            </view>
+              <view
+                  v-if="switchValue"
+                  :style="{
+                    color: '#E74A55',
+                  }"
+                >
+                  {{ subItem.upTotalAmount > 0 ? "+" : ""
+                  }}{{ formatMoney(subItem.upTotalAmount) }}
+                </view>
+                <view v-else>
+                  {{ formatMoney(subItem.totalAmount) }}
+                </view>
+              </view>
+            </template>
           </view>
         </view>
         <view class="transaction-list" v-if="timeMode == 0">
@@ -396,10 +425,14 @@ export default {
     },
     formatDate(dateString) {
       const date = new Date(dateString);
+      console.log(date, "date");
       if (this.timeMode == 1) {
         return `${date.getFullYear()}年`;
       }
-      return `${date.getMonth() + 1}月`;
+      const month = date.getMonth() + 1;
+      return month == 12
+        ? `12月(${date.getFullYear()})`
+        : `${date.getMonth() + 1}月`;
     },
     changeTabs(item) {
       this.timeMode = item.mode;
@@ -516,7 +549,7 @@ export default {
 
   .cateogry-list {
     width: 640rpx;
-    min-height: 193rpx;
+    // min-height: 193rpx;
     display: flex;
     flex-direction: column;
     margin: 38rpx auto 0;
@@ -537,6 +570,23 @@ export default {
       box-sizing: border-box;
       color: #000000;
       font-size: 26rpx;
+    }
+
+    .single {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #000000;
+      font-size: 26rpx;
+      background-color: #f8f8f8;
+      padding: 10rpx 15rpx;
+      border-radius: 12rpx;
+
+      .icon-name {
+        display: flex;
+        align-items: center;
+      }
     }
 
     .icon {
@@ -687,8 +737,9 @@ export default {
       font-size: 24rpx;
       line-height: 1;
       color: #808080;
-      text-align: center;
       width: 96rpx;
+      display: flex;
+      justify-content: center;
     }
   }
 

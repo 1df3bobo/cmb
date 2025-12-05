@@ -60,8 +60,8 @@
 						</view>
 					</view>
 					<view v-else>
-						<!-- 月份头部总结 -->
-						<view class="header" :style="{height:item.categoryList?'324rpx':'242rpx'}" v-if="
+						<!-- 月份头部总结 :style="{height:item.categoryList?'324rpx':'242rpx'}" -->
+						<view class="header" v-if="
 						  activeTitle == 1 &&
 						  item.month &&
 						  (Math.abs(item.incomeTotal) > 0 || Math.abs(item.expensesTotal) > 0)
@@ -102,14 +102,14 @@
 									<view class="summary-item-name">支出</view>
 								</view>
 							</view>
-							<view class="tips" v-if="item.categoryList">
+							<!-- <view class="tips" v-if="item.categoryList">
 								本月支出主要花在<view>
 									<text>{{removeFirstElement(item.categoryList)}}</text>
 								</view>,
 								共计<view>
 									<text>{{item.consumeAmount}}元</text>
 								</view>。
-							</view>
+							</view> -->
 						</view>
 						<view class="header header_1" v-if="activeTitle == 2 && index == 0">
 							<view class="summary">

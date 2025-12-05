@@ -95,13 +95,6 @@
 			</view>
 			<view class="form">
 				<view class="item">
-					<view class="label">仅展示活期流水</view>
-					<view class="content">
-						<u-switch v-model="currentAccountFlowShow" inactiveColor='#D2CFC8' activeColor="#316EE5"
-							size="24"></u-switch>
-					</view>
-				</view>
-				<view class="item">
 					<view class="label">交易类型</view>
 					<view class="content">
 						<view class="list">
@@ -110,6 +103,14 @@
 								@click="changeTransactionType(item)">{{item.name}}
 							</view>
 						</view>
+					</view>
+				</view>
+        <view class="transaction-tips" v-if="selectTransactionType == '代发'">专指招商银行受企业委托并与之签订代发协议后办理的代发工资及其他代发交易，普通转账汇款但文字备注含工资类的交易将不被包含在该类型下，请选择“全部”或“收入”打印流水</view>
+        <view class="item">
+					<view class="label">仅展示活期流水</view>
+					<view class="content">
+						<u-switch v-model="currentAccountFlowShow" inactiveColor='#D2CFC8' activeColor="#316EE5"
+							size="24"></u-switch>
 					</view>
 				</view>
 			</view>
@@ -226,11 +227,14 @@
 						name: '全部',
 					},
 					{
-						name: '收入类',
+						name: '收入',
 					},
 					{
-						name: '支出类',
+						name: '支出',
 					},
+          {
+						name: '代发',
+					}
 				],
 				selectTransactionType: '全部'
 			}
@@ -502,17 +506,18 @@
 
 						.time-item {
 							width: 110rpx;
-							height: 60rpx;
-							background: #E4E4E4;
-							border-radius: 4rpx;
+							height: 50rpx;
+							background: #f8f8f8;
+							border-radius: 12rpx;
 							text-align: center;
-							line-height: 60rpx;
+							line-height: 50rpx;
 							margin-left: 23rpx;
 							color: #666666;
-							font-size: 30rpx;
+							font-size: 26rpx;
 
 							&.active {
 								background-color: #E6EBF5;
+                border: 1rpx solid #2F6EE5;
 								color: #2F6EE5;
 							}
 						}
@@ -533,6 +538,12 @@
 					}
 				}
 			}
+
+      .transaction-tips {
+        color: orange;
+        padding: 0 30rpx;
+        font-size: 28rpx;
+      }
 
 
 			.tips {
