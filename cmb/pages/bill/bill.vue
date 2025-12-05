@@ -405,6 +405,7 @@
 			billFilter(value) {
 				this.transactionCategory = value;
 				this.totalKeyList = ''
+				this.endPageTime = ''
 				this.status = "loading";
 				this.pageNum = 1;
 				this.list = [];
