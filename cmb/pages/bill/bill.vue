@@ -19,7 +19,8 @@
 					<view :class="['item', orderSort ? 'active' : '']" @click="moneySort">
 						<text>按金额</text>
 					</view>
-					<view :class="['item', 'filter' ,transactionCategory?'active':'']" @click="billFilterShow = true">
+					<view :class="['item', 'filter' ,(transactionCategory||maxAmount||minAmount)?'active':'']"
+						@click="billFilterShow = true">
 						<text>筛选</text>
 					</view>
 				</view>
@@ -238,6 +239,8 @@
 				billRangeData: {},
 				pageNum: 1,
 				pageSize: 10,
+				minAmount: null,
+				maxAmount: null,
 				list: [],
 				totalPage: 1,
 				activeTitle: 1,
@@ -403,11 +406,13 @@
 				this.getBillPage();
 			},
 			billFilter(value) {
-				this.transactionCategory = value;
+				this.transactionCategory = value.valueStr;
+				this.minAmount = value.minAmount
+				this.maxAmount = value.maxAmount
 				this.totalKeyList = ''
-				this.endPageTime = ''
 				this.status = "loading";
 				this.pageNum = 1;
+				this.endPageTime = ''
 				this.list = [];
 				this.getBillPage();
 			},
@@ -418,6 +423,11 @@
 				this.pageNum = 1;
 				this.list = [];
 				this.activeTitle = e.activeTitle;
+				if (this.activeTitle === 1) {
+					this.queryTime = e.data.text.replace('.', '-')
+				}
+				this.totalKeyList = ''
+				this.endPageTime = ''
 				this.getBillPage();
 			},
 			getBillPage() {
@@ -429,6 +439,8 @@
 						categorys: this.transactionCategory,
 						queryTime: this.queryTime,
 						totalKeyList: this.totalKeyList,
+						minAmount: this.minAmount,
+						maxAmount: this.maxAmount,
 					}).then((res) => {
 						if (res.code === 200) {
 							this.list = [...this.list, ...res.data.list];
@@ -454,6 +466,8 @@
 						categorys: this.transactionCategory,
 						endTime: this.selectDate.end,
 						beginTime: this.selectDate.start,
+						minAmount: this.minAmount,
+						maxAmount: this.maxAmount,
 					}).then((res) => {
 						if (res.code === 200) {
 							this.list = [...this.list, ...res.data.list];
