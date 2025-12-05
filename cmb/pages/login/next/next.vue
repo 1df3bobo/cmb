@@ -66,14 +66,14 @@
 							state: true
 						})
 						this.get_user_info().then(() => {
-							reLaunch({
-								url: '/' + this.path,
-								fail: () => {
-									switchTab({
-										url: '/' + this.path,
-									})
-								}
-							});
+						reLaunch({
+                                url: '/' + this.path,
+                                fail: () => {
+                                 switchTab({
+                                  url: '/pages/index/index',
+                                 })
+                                }
+                               })
 						})
 					} else {
 						toast.msgBox(res.msg)

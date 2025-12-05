@@ -161,7 +161,8 @@
 	} from 'vuex'
 	import {
 		navigateTo,
-		formatAmount
+		formatAmount,
+		redirectTo,
 	} from '../../utils';
 	import {
 		getMemberInfo
@@ -262,7 +263,7 @@
 				this.init_user_info({
 					userInfo: {},
 				})
-				navigateTo({
+				redirectTo({
 					url: '/pages/login/login'
 				})
 			},
