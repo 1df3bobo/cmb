@@ -25,10 +25,10 @@
     <view class="label">付款账户</view>
     <view class="content">{{info.bankCard}}</view>
    </view>
-   <view class="cell">
-    <view class="label">转账附言</view>
-    <view class="content">本人</view>
-   </view>
+ <view class="cell" v-if="info.merchantBranch">
+     <view class="label">转账附言</view>
+     <view class="content">{{info.merchantBranch}}</view>
+    </view>
    <view class="cell">
     <view class="label">转账渠道</view>
     <view class="content">{{info.transactionChannel}}</view>
