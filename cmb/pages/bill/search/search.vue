@@ -4,7 +4,7 @@
    <view class="nav">
     <view class="search">
      <image class="search-icon" src="/static/icon/search-grey.png" mode=""></image>
-     <input v-model="keyword" class="search-input" placeholder="输入关键字" type="text" />
+     <input v-model="keyword" @confirm="inputConfirm" confirm-type="search" class="search-input" placeholder="输入关键字" type="text" />
      <image v-if="keyword" @click="clear" class="search-close" src="/static/icon/close2.png" mode="">
      </image>
     </view>
@@ -194,6 +194,12 @@
     this.list = []
     this.endPageTime = ''
     this.getBillPage()
+   },
+   inputConfirm() {
+    this.pageNum = 1
+    this.list = []
+    this.endPageTime = ''
+   	this.getBillPage()
    },
    getBillPage() {
     toast.showLoading('正在为您查询')
