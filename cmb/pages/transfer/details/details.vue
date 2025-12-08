@@ -15,7 +15,7 @@
   <view class="details">
    <view class="cell">
     <view class="label">收款账户</view>
-    <view class="content">{{info.oppositeAccount}}</view>
+    <view class="content">{{ info.oppositeAccount}}</view>
    </view>
    <view class="cell">
     <view class="label">收款银行</view>
@@ -23,7 +23,7 @@
    </view>
    <view class="cell">
     <view class="label">付款账户</view>
-    <view class="content">{{info.bankCard}}</view>
+    <view class="content">{{repeatCardNumber(info.bankCard)}}</view>
    </view>
  <view class="cell" v-if="info.merchantBranch">
      <view class="label">转账附言</view>
@@ -73,15 +73,14 @@
 </template>
 
 <script>
- import {
-  navigateTo
- } from '../../../utils';
+ import { navigateTo, repeatCardNumber } from "@/utils/index.js";
  import {
   getTransferInfo
  } from '@/api/index.js'
  export default {
   data() {
    return {
+    repeatCardNumber: repeatCardNumber,
     id: '',
     info: {}
    };

@@ -26,7 +26,7 @@
 				<view class="title">转出记录</view>
 				<view class="item" v-for="(item,index) in list" :key="index" @click="details(item)">
 					<view class="item-title" v-if="item.day">
-						{{item.day}}
+						{{item.day == currentMonth ? '本月':item.day}}
 					</view>
 					<view class="item-content">
 						<image class="icon" :src="item.icon" mode=""></image>
@@ -97,7 +97,12 @@
 			}
 		},
 		computed: {
-			...mapState(['statusBarHeight', 'navBarHeight'])
+			...mapState(['statusBarHeight', 'navBarHeight']),
+      currentMonth() {
+        const nowDate = new Date();
+        const currentMonth = nowDate.getMonth() + 1;
+        return `${currentMonth}月`;
+      }
 		},
 		methods: {
 			openBankPop() {

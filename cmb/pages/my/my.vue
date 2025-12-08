@@ -181,7 +181,7 @@
 		},
 		computed: {
 			...mapState(['navBarHeight', 'statusBarHeight', 'userInfo']),
-			replaceWithAsterisks(str) {
+			replaceWithAsterisks() {
 				let realName = this.userInfo.realName
 				if (!realName) return
 				if (realName.length <= 1) {

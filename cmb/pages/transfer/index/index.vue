@@ -25,7 +25,7 @@
 						<image class="user-icon" src="/static/transfer/user-icon.png" mode=""></image>
 						<view class="user-name">{{userInfo.realName}}</view>
 						<view class="user-num">{{ userInfo.bankList.length }}</view>
-						<view class="user-share">分享卡号</view>
+						<view class="user-share" @click="goSkmp">分享卡号</view>
 						<image :class="['user-arrow',!isMoreList?'user-arrow-acitive':'']"
 							src="/static/icon/arrow-top.png" mode="">
 						</image>
@@ -154,6 +154,11 @@
       goContactList() {
 				navigateTo({
 					url: '/pages/transfer/contactList/contactList?mine=true'
+				})
+			},
+      goSkmp() {
+				navigateTo({
+					url: '/pages/transfer/card/card'
 				})
 			},
 			// 获取最近转账伙伴 

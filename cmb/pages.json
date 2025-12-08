@@ -41,6 +41,13 @@
 				"navigationBarTitleText" : ""
 			}
 		},
+    {
+			"path" : "pages/transfer/card/card",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
 		{
 			"path" : "pages/transfer/mobile/mobile",
 			"style" : 

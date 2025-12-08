@@ -45,7 +45,7 @@
     </view>
     <view class="cell">
      <view class="label">交易时间</view>
-     <view class="content">{{info.transactionTime}}</view>
+     <view class="content">{{transactionTime}}</view>
     </view>
    </view>
    <view class="receipt-active" v-show="id !== 1">
@@ -69,7 +69,6 @@
     <image class="tab-footer" src="/static/home/notifyBeneficiary3.png" mode=""></image>
    </view>
   </view>
- </view>
  </view>
 </template>
 
@@ -121,7 +120,17 @@
    }
   },
   computed: {
-   ...mapState(['userInfo'])
+    ...mapState(['userInfo']),
+    transactionTime() {
+      if(this.info.transactionTime) {
+        const date = new Date(this.info.transactionTime);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份是从0开始的，所以要加1
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}年${month}月${day}日`;
+      }
+      return '';
+    },
   },
   methods: {
    change(item) {

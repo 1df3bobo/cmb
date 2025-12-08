@@ -1,6 +1,6 @@
 <template>
   <view class="app">
-    <navbar bg-color="#f8f8f8" more-btn service-btn title="收支分析"> </navbar>
+    <navbar bg-color="#f8f8f8" more-btn ai-btn title="收支分析"> </navbar>
     <view class="main">
       <u-sticky :customNavHeight="statusBarHeight + navBarHeight">
         <view class="tabs">
@@ -101,14 +101,14 @@
             </view>
           </view>
         </scroll-view>
-        <view class="chat-tips">
+        <!-- <view class="chat-tips">
           <text>过去3月结余为负，小招教你如何科学攒钱</text>
           <image
             class="chat-tips-icon"
             src="/static/icon/arrow-gray-right.png"
             mode=""
           ></image>
-        </view>
+        </view> -->
       </view>
       <view class="details">
         <view class="details-title">
@@ -136,7 +136,16 @@
           </view>
         </view>
         <view class="details-money">
-          <text>弹性{{ tab == 1 ? "支出" : "收入" }}</text>
+          <view class="details-money-title">
+            <text>{{ tab == 1 ? "弹性支出" : "收入" }}</text>
+            <image
+              v-if="tab == 1"
+              @click="showTips(1)"
+              class="tips-icon"
+              src="/static/icon/icon13.png"
+              mode=""
+            ></image>
+          </view>
           <view v-if="tab == 0">￥{{ formatAmount(details.income) }}</view>
           <view v-else>
             {{ details.expenses < 0 ? "-" : "" }}￥{{
@@ -182,11 +191,11 @@
                 v-for="(subItem, subIndex) in item"
                 :key="subIndex"
               >
-              <view>
-                <image :src="subItem.categoryIcon" class="icon" />
-                <view>{{ subItem.name }}</view>
-              </view>
-              <view
+                <view>
+                  <image :src="subItem.categoryIcon" class="icon" />
+                  <view>{{ subItem.name }}</view>
+                </view>
+                <view
                   v-if="switchValue"
                   :style="{
                     color: '#E74A55',
@@ -202,21 +211,26 @@
             </template>
           </view>
         </view>
-        <view class="transaction-list" v-if="timeMode == 0">
-          <view
-            class="transaction-item"
-            v-if="index < 3"
-            v-for="(item, index) in transactioList"
-            :key="index"
-          >
-            <view class="transaction-name">
-              {{ item.name }}
-            </view>
-            <view class="transaction-monry">
-              ￥{{ formatAmount(Math.abs(item.amount)) }}
+        <template v-if="timeMode == 0">
+          <view class="transaction-list">
+            <view
+              class="transaction-item"
+              v-for="(item, index) in transactioList"
+              :key="index"
+            >
+              <view class="transaction-name">
+                {{ item.name }}
+              </view>
+              <view class="transaction-monry">
+                ￥{{ formatAmount(Math.abs(item.amount)) }}
+              </view>
             </view>
           </view>
-          <view class="more-transaction" @click="moreTransaction">
+          <view
+            class="more-transaction"
+            @click="moreTransaction"
+            v-if="transactioList.length > 3"
+          >
             <text>更多交易</text>
             <image
               class="more-transaction-icon"
@@ -224,9 +238,40 @@
               mode=""
             ></image>
           </view>
-        </view>
+          <view class="empty-transaction" v-if="transactioList.length == 0">
+            <text>{{ timeMode == 0 ? '本月暂无交易':'本年暂无交易' }} </text>
+          </view>
+        </template>
+        <template v-if="tab == 1">
+          <view class="details-money">
+            <view class="details-money-title">
+              <text>固定支出</text>
+              <image
+                v-if="tab == 1"
+                @click="showTips(2)"
+                class="tips-icon"
+                src="/static/icon/icon13.png"
+                mode=""
+              ></image>
+            </view>
+            <view>￥0.00</view>
+          </view>
+          <view class="empty-transaction">
+            <text>{{ timeMode == 0 ? '本月暂无交易':'本年暂无交易' }} </text>
+          </view>
+        </template>
       </view>
     </view>
+    <u-modal
+      :show="tipsPopShow"
+      confirmText="我知道了"
+      @confirm="tipsPopShow = false"
+    >
+      <view class="tips-content">
+        <view class="tips-title">{{ tipModal.title }}</view>
+        <view>{{ tipModal.content }}</view>
+      </view>
+    </u-modal>
     <u-picker
       @confirm="pickerConfirm"
       closeOnClickOverlay
@@ -291,16 +336,39 @@ export default {
       trendList: [],
       scrollIntoView: "",
       switchValue: false,
+      tipsPopShow: false,
+      tipsPopIndex: 1,
     };
   },
   computed: {
     ...mapState(["userInfo", "navBarHeight", "statusBarHeight"]),
+    tipModal() {
+      if (this.tipsPopIndex == 1) {
+        return {
+          title: "什么是弹性支出",
+          content:
+            "弹性支出是吃喝、日用品等生活消费支出。压缩弹性支出，可以增加每月结余，日积月累也会有不小的数字",
+        };
+      }
+      return {
+        title: "什么是固定支出",
+        content:
+          "固定支出是房贷、缴费等相对稳定的支出。固定支出占比越低，生活压力越小，可自由支配的钱就越多",
+      };
+    },
     transactioList() {
-      let list =
-        this.tab == 0
-          ? this.details.incomeRankList
-          : this.details.expensesRankList;
-      if (!list) return [];
+      let list = [];
+      if (this.tab == 0) {
+        list =
+          this.details.incomeRankList.length > 3
+            ? this.details.incomeRankList.slice(0, 3)
+            : this.details.incomeRankList;
+      } else {
+        list =
+          this.details.expensesRankList.length > 3
+            ? this.details.expensesRankList.slice(0, 3)
+            : this.details.expensesRankList;
+      }
       return list;
     },
     // 格式化金额显示
@@ -421,7 +489,8 @@ export default {
     },
     getBarHeight(value) {
       // 计算柱状图高度百分比
-      return (value / this.maxValue) * 80;
+      const height = (value / this.maxValue) * 80;
+      return height < 3 ? 3 : height;
     },
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -480,6 +549,10 @@ export default {
       // 时间选择
       this.selectDate = e;
     },
+    showTips(value) {
+      this.tipsPopIndex = value;
+      this.tipsPopShow = true;
+    },
     pickerConfirm(e) {
       this.$set(this.selectDate, "text", e.value[0]);
       if (this.timeMode == 0) {
@@ -516,6 +589,7 @@ export default {
     justify-content: center;
     color: #000000;
     font-size: 26rpx;
+    margin-top: 70rpx;
 
     .more-transaction-icon {
       width: 50rpx;
@@ -523,10 +597,20 @@ export default {
     }
   }
 
+  .empty-transaction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26rpx;
+    color: #999999;
+    padding: 50rpx 0;
+    // margin-top: 50rpx;
+  }
+
   .transaction-list {
-    width: 640rpx;
-    margin: auto;
-    margin-top: 30rpx;
+    width: calc(100% - 65rpx);
+    margin-left: 38rpx;
+    // margin-top: 30rpx;
 
     .transaction-item {
       display: flex;
@@ -539,11 +623,16 @@ export default {
 
       .transaction-name {
         font-size: 26rpx;
+        font-weight: normal;
       }
 
       .transaction-monry {
         font-size: 30rpx;
       }
+    }
+
+    .transaction-item:first-child {
+      margin-top: 30rpx;
     }
   }
 
@@ -609,6 +698,17 @@ export default {
     line-height: 1;
     color: #000000;
     font-size: 32rpx;
+
+    .details-money-title {
+      display: flex;
+      align-items: center;
+
+      .tips-icon {
+        width: 30rpx;
+        height: 30rpx;
+        margin-left: 6rpx;
+      }
+    }
   }
 
   .details-title {
@@ -659,6 +759,7 @@ export default {
   background: #ffffff;
   border-radius: 20rpx 20rpx 20rpx 20rpx;
   margin: auto;
+  padding-bottom: 30rpx;
 
   .chat-tips {
     display: flex;
@@ -822,6 +923,18 @@ export default {
       height: 20rpx;
       margin-left: 8rpx;
     }
+  }
+}
+
+.tips-content {
+  width: 100%;
+  font-size: 32rpx;
+  color: #000000;
+  font-weight: normal;
+
+  .tips-title {
+    margin-bottom: 10rpx;
+    font-weight: 500;
   }
 }
 </style>

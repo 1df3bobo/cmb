@@ -1,9 +1,9 @@
 <template>
 	<view class="app">
 		<view class="header">
-			<view class="user-info">
+			<view class="user-info" @click="goSet">
 				<image class="user-info-header" src="/static/icon/header-icon.png" mode=""></image>
-				<text>什么</text>
+				<text>{{ replaceWithAsterisks }}</text>
 			</view>
 			<view class="search" @click="goSearch">
 
@@ -19,16 +19,35 @@
 	import {
 		navigateTo
 	} from '@/utils/index.js'
+  import {
+		mapState,
+	} from 'vuex'
 	export default {
 		data() {
 			return {
 
 			}
 		},
+    computed: {
+			...mapState(['userInfo']),
+			replaceWithAsterisks() {
+				let realName = this.userInfo.realName
+				if (!realName) return
+				if (realName.length <= 1) {
+					return realName;
+				}
+				return realName.slice(0, -1).replace(/./g, '*') + realName.slice(-1);
+			}
+		},
 		methods: {
 			goSearch() {
 				navigateTo({
 					url: `/pages/search/search`
+				})
+			},
+      goSet() {
+				navigateTo({
+					url: `/pages/my/set/set`
 				})
 			},
 		}
