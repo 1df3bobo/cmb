@@ -27,11 +27,9 @@
           <view class="content">{{ details.transactionTime }}</view>
         </view>
         <view class="cell" v-if="details.oppositeBankName">
-          <view class="label"
-            >>{{ details.type == 1 ? "付款" : "收款" }}银行</view
-          >
+          <view class="label">{{ details.type == 1 ? "付款" : "收款" }}银行</view >
           <view class="content">{{
-            repeatCardNumber(details.oppositeBankName)
+            details.oppositeBankName
           }}</view>
         </view>
         <view class="cell" v-if="details.oppositeAccount">
