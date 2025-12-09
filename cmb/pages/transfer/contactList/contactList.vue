@@ -15,8 +15,10 @@
 				</view>
 			</view>
 			<view class="search">
-				<text>银行名/账户/户名/手机号</text>
-				<image class="search-icon" src="/static/icon/search@2x.png" mode=""></image>
+        <input v-model="searchValue" class="search-input" type="text" placeholder="银行名/账户/户名/手机号" />
+        <view class="search-btn" @click="search">
+          <image class="search-icon" src="/static/icon/search@2x.png" mode=""></image>
+        </view>
 			</view>
 			<view class="add" v-if="tab == 1">
 				<text class="add-text">+</text>
@@ -79,8 +81,10 @@
 		data() {
 			return {
         navTitle: '选择转账伙伴',
+        searchValue: '',
 				contactsList: [],
 				groupedNames: [],
+        showGroupedNames: [],
 				isMoreList: false,
 				tab: '1',
 				tabs: [{
@@ -94,7 +98,7 @@
 		},
 		onLoad(options) {
       if(options.mine) {
-        this.navTitle = '我的转账伙伴'
+        this.navTitle = '我的转账伙伴1'
       }
 			this.getContactsList()
 		},
@@ -111,6 +115,15 @@
 				if (this.tab === item.id) return
 				this.tab = item.id
 			},
+      search() {
+        const list = this.contactsList.filter(item => {
+          const index1 = item.name.indexOf(this.searchValue) != -1;
+          const index2 = item.bankName.indexOf(this.searchValue) != -1;
+          const index3 = item.bankCard.indexOf(this.searchValue) != -1;
+          return index1 || index2 || index3
+        });
+        this.groupByFirstLetter(list);
+      },
 			// 获取最近转账伙伴 
 			getContactsList() {
 				getContactsList().then((res) => {
@@ -222,15 +235,37 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 0 111rpx 0 21rpx;
+			padding: 0 0 0 21rpx;
 			box-sizing: border-box;
 			color: #A1A1A1;
 			font-size: 26rpx;
 
-			.search-icon {
-				width: 40rpx;
-				height: 40rpx;
+      .search-input {
+				flex: 1;
+				font-size: 26rpx;
 			}
+
+      .search-btn {
+        width: 180rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        .search-icon {
+          width: 40rpx;
+          height: 40rpx;
+        }
+      }
+
+      .search-btn::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 2rpx;
+        height: 100%;
+        background-color: #F8F8F8;
+      }
 		}
 
 		.add {

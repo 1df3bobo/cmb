@@ -191,7 +191,7 @@
                 v-for="(subItem, subIndex) in item"
                 :key="subIndex"
               >
-                <view>
+                <view class="icon-name">
                   <image :src="subItem.categoryIcon" class="icon" />
                   <view>{{ subItem.name }}</view>
                 </view>
@@ -212,34 +212,39 @@
           </view>
         </view>
         <template v-if="timeMode == 0">
-          <view class="transaction-list">
-            <view
-              class="transaction-item"
-              v-for="(item, index) in transactioList"
-              :key="index"
-            >
-              <view class="transaction-name">
-                {{ item.name }}
-              </view>
-              <view class="transaction-monry">
-                ￥{{ formatAmount(Math.abs(item.amount)) }}
+          <view>
+            <view class="transaction-list">
+              <view
+                class="transaction-item"
+                v-if="index < 3"
+                v-for="(item, index) in transactioList"
+                :key="index"
+              >
+                <view class="transaction-name">
+                  {{ item.name }}
+                </view>
+                <view class="transaction-monry">
+                  ￥{{ formatAmount(Math.abs(item.amount)) }}
+                </view>
               </view>
             </view>
-          </view>
-          <view
-            class="more-transaction"
-            @click="moreTransaction"
-            v-if="transactioList.length > 3"
-          >
-            <text>更多交易</text>
-            <image
-              class="more-transaction-icon"
-              src="/static/icon/arrow-gray-right.png"
-              mode=""
-            ></image>
-          </view>
-          <view class="empty-transaction" v-if="transactioList.length == 0">
-            <text>{{ timeMode == 0 ? '本月暂无交易':'本年暂无交易' }} </text>
+            <view
+              class="more-transaction"
+              @click="moreTransaction"
+              v-if="transactioList.length > 3"
+            >
+              <text>更多交易</text>
+              <image
+                class="more-transaction-icon"
+                src="/static/icon/arrow-gray-right.png"
+                mode=""
+              ></image>
+            </view>
+            <view class="empty-transaction" v-if="transactioList.length == 0">
+              <text
+                >{{ timeMode == 0 ? "本月暂无交易" : "本年暂无交易" }}
+              </text>
+            </view>
           </view>
         </template>
         <template v-if="tab == 1">
@@ -257,7 +262,7 @@
             <view>￥0.00</view>
           </view>
           <view class="empty-transaction">
-            <text>{{ timeMode == 0 ? '本月暂无交易':'本年暂无交易' }} </text>
+            <text>{{ timeMode == 0 ? "本月暂无交易" : "本年暂无交易" }} </text>
           </view>
         </template>
       </view>
@@ -357,18 +362,11 @@ export default {
       };
     },
     transactioList() {
-      let list = [];
-      if (this.tab == 0) {
-        list =
-          this.details.incomeRankList.length > 3
-            ? this.details.incomeRankList.slice(0, 3)
-            : this.details.incomeRankList;
-      } else {
-        list =
-          this.details.expensesRankList.length > 3
-            ? this.details.expensesRankList.slice(0, 3)
-            : this.details.expensesRankList;
-      }
+      let list =
+        this.tab == 0
+          ? this.details.incomeRankList
+          : this.details.expensesRankList;
+      if (!list) return [];
       return list;
     },
     // 格式化金额显示
@@ -675,6 +673,7 @@ export default {
       .icon-name {
         display: flex;
         align-items: center;
+        gap: 10rpx;
       }
     }
 
