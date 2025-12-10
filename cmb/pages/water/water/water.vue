@@ -340,11 +340,11 @@
 					showType: showType
 				}).then((res) => {
 					if (res.code === 200) {
+            this.passwordShow = false
 						toast.showSuccess('验证成功').then(() => {
 							navigateTo({
 								url: '/pages/water/result/result?email=' + this.email
 							})
-							this.passwordShow = false
 						})
 					}
 				})

@@ -75,7 +75,7 @@
       <view
         class="cate"
         :style="{
-          height: `${px2rpx(navBarHeight) + px2rpx(statusBarHeight) + 440}rpx`,
+          height: `${px2rpx(navBarHeight) + px2rpx(statusBarHeight) + 430}rpx`,
           paddingTop: `${navBarHeight + statusBarHeight}px`,
         }"
       >
@@ -88,6 +88,7 @@
           <image class="icon" :src="item.icon"></image>
           <text>{{ item.name }}</text>
         </view>
+        <view class="main-banner" @click="mainBanner"></view>
       </view>
       <view class="projects">
         <view
@@ -291,6 +292,11 @@ export default {
         url: `/pages/common/common?pageImage=/static/pages/tj.png&serviceBtn=${false}&moreBtn=${false}`,
       });
     },
+    mainBanner() {
+      navigateTo({
+        url: `/pages/commonPages/commonPages?pageImage=/static/pages/homeMainBanner.png&title=省心省力 稳健增值&serviceBtn=${false}`,
+      });
+    },
     goBanner(item) {
       if (item.path) {
         navigateTo({
@@ -404,6 +410,7 @@ export default {
   background-position: bottom;
   background-repeat: no-repeat;
   background-size: cover;
+  position: relative;
 
   .item {
     display: flex;
@@ -414,12 +421,22 @@ export default {
     padding-top: 36rpx;
     box-sizing: border-box;
     line-height: 1;
+    height: 160rpx;
+    width: 25%;
 
     .icon {
       width: 62rpx;
       height: 62rpx;
       margin-bottom: 17rpx;
     }
+  }
+
+  .main-banner {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 260rpx;
   }
 }
 

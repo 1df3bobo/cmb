@@ -36,16 +36,16 @@ module.exports = {
 		config
 			.plugin('define')
 	},
-	devServer: {
-    proxy: {
-      '/api': {
-        target: 'http://api.chinajianse.com', // 你要请求的目标服务器地址
-        changeOrigin: true, // 是否改变源
-        secure: false, // 是否允许跨协议
-        pathRewrite: {
-          '^/api': '' // 重写路径，去掉 /api 部分
-        }
-      }
-    }
-  }
+	// devServer: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://api.chinajianse.com', // 你要请求的目标服务器地址
+  //       changeOrigin: true, // 是否改变源
+  //       secure: false, // 是否允许跨协议
+  //       pathRewrite: {
+  //         '^/api': '' // 重写路径，去掉 /api 部分
+  //       }
+  //     }
+  //   }
+  // }
 }
