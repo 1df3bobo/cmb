@@ -230,7 +230,7 @@ export default {
 }
 
 .label {
-  width: 120rpx;
+  width: 140rpx;
   flex-shrink: 0;
   margin-right: 20rpx;
   margin-top: 14rpx;

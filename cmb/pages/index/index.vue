@@ -113,22 +113,51 @@
       </view>
       <view class="banner">
         <swiper class="banner-swiper" circular autoplay>
-					<swiper-item class="swiper-item" v-for="item in bannarList" :key="item.id" @click="goBanner(item)">
-						<image class="icon" :src="item.icon"></image>
-					</swiper-item>
-				</swiper>
+          <swiper-item
+            class="swiper-item"
+            v-for="item in bannarList"
+            :key="item.id"
+            @click="goBanner(item)"
+          >
+            <image class="icon" :src="item.icon"></image>
+          </swiper-item>
+        </swiper>
       </view>
       <view class="footer-page">
-        <!-- 财富精选
-				<view class="caifu" @click="caifu"></view> -->
+        <!-- 财富精选 -->
+        <view class="caifu" @click="caifu"></view>
         <!-- 借钱 -->
         <view class="jieqian" @click="jieqian"></view>
         <!-- 特色榜单 -->
         <view class="specialtyList" @click="specialtyList"></view>
         <!-- 生活特惠 -->
-        <view class="shenghuo" @click="shenghuo"></view>
+        <view class="shenghuo">
+          <!-- 热映大片 -->
+          <view class="movie" @click="goHotMovie"></view>
+          <view class="module-row">
+            <!-- 碳寻星空 -->
+            <view class="tanxunxingkong" @click="goTanxunxingkong"></view>
+            <!-- 曹操出行 -->
+            <view class="caocaochuxing" @click="goCaocaochuxing"></view>
+          </view>
+        </view>
         <!-- 看点情报 -->
         <view class="qingbao" @click="qingbao"></view>
+        <!-- pk话题 -->
+        <view class="pkht"></view>
+        <!-- 上证指数 -->
+        <view class="other">
+          <!-- 稳健人集合 -->
+          <view class="wjrjg" @click="goWjrjg"></view>
+          <view style="width: 50%">
+            <!-- 热门板块 -->
+            <view class="other-right" @click="goRmbk"></view>
+            <!-- 备老乘早 -->
+            <view class="other-right" @click="goBlcz"></view>
+          </view>
+        </view>
+        <!-- 热议话题 -->
+        <view class="ryht" @click="reyi"></view>
       </view>
     </view>
   </view>
@@ -251,6 +280,7 @@ export default {
   onLoad() {},
   onPageScroll(e) {
     var scrollTop = e.scrollTop;
+    console.log(scrollTop);
     if (scrollTop >= this.navBarHeight) {
       this.opacity = 0;
       return;
@@ -273,13 +303,19 @@ export default {
       });
     },
     jieqian() {
+      // navigateTo({
+      //   url: `/pages/borrowMoney/borrowMoney`,
+      // });
       navigateTo({
-        url: `/pages/borrowMoney/borrowMoney`,
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/jieqian.png`,
       });
     },
     specialtyList() {
+      // navigateTo({
+      //   url: `/pages/index/specialtyList/specialtyList`,
+      // });
       navigateTo({
-        url: `/pages/index/specialtyList/specialtyList`,
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/tsbd.png`,
       });
     },
     shenghuo() {
@@ -288,8 +324,34 @@ export default {
       });
     },
     qingbao() {
+      // navigateTo({
+      //   url: `/pages/common/common?pageImage=/static/pages/tj.png&serviceBtn=${false}&moreBtn=${false}`,
+      // });
       navigateTo({
-        url: `/pages/common/common?pageImage=/static/pages/tj.png&serviceBtn=${false}&moreBtn=${false}`,
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/kdqb.png`,
+      });
+    },
+    reyi() {
+      // navigateTo({
+      //   url: `/pages/common/common?pageImage=/static/pages/tj.png&serviceBtn=${false}&moreBtn=${false}`,
+      // });
+      navigateTo({
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/ryht.png`,
+      });
+    },
+    goWjrjg() {
+      navigateTo({
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/wjrhj.png`,
+      });
+    },
+    goRmbk() {
+      navigateTo({
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/rmbk.png`,
+      });
+    },
+    goBlcz() {
+      navigateTo({
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/blcz.png`,
       });
     },
     mainBanner() {
@@ -326,6 +388,21 @@ export default {
     goMessage() {
       navigateTo({
         url: `/pages/messageCenter/messageCenter`,
+      });
+    },
+    goHotMovie() {
+      navigateTo({
+        url: `/pages/index/hotMovie/hotMovie`,
+      });
+    },
+    goCaocaochuxing() {
+      navigateTo({
+        url: `/pages/commonPages/commonPages?pageImage=/static/pages/caocaochuxing.png&title=曹操出行周周有礼&serviceBtn=${false}`,
+      });
+    },
+    goTanxunxingkong() {
+      navigateTo({
+        url: `/pages/commonPages/commonPages?pageImage=/static/pages/tanxunxingkong.png&title=碳寻星空&serviceBtn=${false}&shareBtn=${true}`,
       });
     },
   },
@@ -541,14 +618,61 @@ export default {
 
   .shenghuo {
     width: 100%;
-    height: 690rpx;
+    height: 700rpx;
     margin-top: 60rpx;
+
+    .movie {
+      height: 490rpx;
+    }
+
+    .tanxunxingkong {
+      width: 50%;
+      height: 210rpx;
+    }
+
+    .caocaochuxing {
+      width: 50%;
+      height: 210rpx;
+    }
   }
 
   .qingbao {
     width: 100%;
-    height: 2590rpx;
+    height: 400rpx;
     margin-top: 60rpx;
+  }
+
+  .pkht {
+    width: 100%;
+    height: 350rpx;
+    margin-top: 60rpx;
+  }
+
+  .other {
+    width: 100%;
+    height: 500rpx;
+    margin-top: 180rpx;
+    display: flex;
+
+    .wjrjg {
+      height: 100%;
+      width: 50%;
+    }
+
+    .other-right {
+      height: 50%;
+      width: 100%;
+    }
+  }
+
+  .ryht {
+    width: 100%;
+    height: 470rpx;
+    margin-top: 20rpx;
+  }
+
+  .module-row {
+    display: flex;
   }
 }
 </style>

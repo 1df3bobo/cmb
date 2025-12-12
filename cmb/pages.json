@@ -90,6 +90,13 @@
 				"navigationBarTitleText" : ""
 			}
 		},
+    {
+			"path" : "pages/commonNoNavPages/commonNoNavPages",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
 		{
 			"path" : "pages/friendsBorrowFriendsBack/friendsBorrowFriendsBack",
 			"style" : 
@@ -323,6 +330,13 @@
 		},
 		{
 			"path" : "pages/index/specialtyList/specialtyList",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+    {
+			"path" : "pages/index/hotMovie/hotMovie",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
