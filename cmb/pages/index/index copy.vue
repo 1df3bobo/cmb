@@ -2,7 +2,6 @@
   <view class="app">
     <page-meta :page-style="'overflow:' + (showPageTwo ? 'hidden' : 'visible')" />
     <navbar
-      v-show="showNav"
       :showBack="false"
       :placeholder="false"
       :bg-color="`rgba(255,255,255,${1 - opacity})`"
@@ -201,7 +200,6 @@ export default {
       maxPullDistance: 300, // 最大下拉距离
       touchMoveDistance: "0",
       showPageTwo: false,
-      showNav: true,
       opacity: 1,
       bannarList: [
         {
@@ -325,8 +323,6 @@ export default {
   methods: {
     onTouchStart(e) {
       this.startY = e.touches[0].clientY;
-      this.touchMoveDistance = 0;
-      this.rafing = false;
     },
 
     onTouchMove(e) {
@@ -340,36 +336,16 @@ export default {
         // 阻尼效果
         let dampedDiff = this.damping(diff);
 
-        // if (dampedDiff - 50 < 0) dampedDiff = 0;
+        if (dampedDiff - 50 < 0) dampedDiff = 0;
 
-        // this.touchMoveDistance = dampedDiff;
-
-        if (!this.rafing) {
-          this.rafing = true;
-          requestAnimationFrame(() => {
-            this.showNav = false;
-            this.touchMoveDistance = dampedDiff;
-            this.rafing = false;
-          });
-        }
+        this.touchMoveDistance = dampedDiff;
       }
     },
     onTouchEnd() {
       if (this.touchMoveDistance >= 250) {
-        // 平滑归位，再展示 popup
-        this.touchMoveDistance = 200;
-        this.showNav = true;
-        setTimeout(() => {
-          this.showPageTwo = true;
-          uni.hideTabBar();
-          // requestAnimationFrame(() => {
-            this.touchMoveDistance = 0;
-          // });
-        }, 50);
-      } else {
-        this.touchMoveDistance = 0;
-        this.showNav = true;
+        this.pageOpen();
       }
+      this.touchMoveDistance = 0;
     },
     // 阻尼函数
     damping(x) {
@@ -378,15 +354,9 @@ export default {
     },
     pageClose() {
       this.showPageTwo = false;
-      setTimeout(() => {
-        uni.showTabBar({ animation: false });
-      }, 250);
     },
     pageOpen() {
-      requestAnimationFrame(() => {
-        this.touchMoveDistance = 0;
-      });
-      // this.showPageTwo = true;
+      this.showPageTwo = true;
     },
     goSearch() {
       navigateTo({
@@ -403,7 +373,7 @@ export default {
       //   url: `/pages/borrowMoney/borrowMoney`,
       // });
       navigateTo({
-        url: `/pages/index/jieQian/jieQian`,
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/jieqian.png`,
       });
     },
     specialtyList() {
@@ -516,9 +486,6 @@ export default {
   min-height: 400rpx;
   position: relative;
   background-color: #f8f8f7;
-  will-change: transform;
-  transform: translateZ(0);
-  transition: transform 0.16s ease-out;
 }
 
 .header {

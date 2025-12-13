@@ -1,207 +1,188 @@
 <template>
-  <view class="app">
-    <page-meta :page-style="'overflow:' + (showPageTwo ? 'hidden' : 'visible')" />
-    <navbar
-      v-show="showNav"
-      :showBack="false"
-      :placeholder="false"
-      :bg-color="`rgba(255,255,255,${1 - opacity})`"
-    >
-      <slot>
-        <view class="nav-content" :style="{ height: `${navBarHeight}px` }">
-          <image
-            class="nav-scan"
-            :src="
-              opacity < 1
-                ? '/static/icon/scan-black.png'
-                : '/static/icon/scan-white.png'
-            "
-          ></image>
-          <view
-            class="nav-search"
-            @click="goSearch"
-            :style="{
-              border: opacity < 1 ? '1rpx solid #ccc' : '1rpx solid #fff',
-            }"
-          >
+  <scrollRefreshFloor @open="openFloor">
+    <template #floor>
+      <image style="width:100vw" mode="widthFix" src="/static/pages/home-page-2.png" />
+    </template>
+    <view class="app">
+      <navbar
+        :showBack="false"
+        :placeholder="false"
+        :bg-color="`rgba(255,255,255,${1 - opacity})`"
+      >
+        <slot>
+          <view class="nav-content" :style="{ height: `${navBarHeight}px` }">
             <image
-              class="nav-search-icon"
+              class="nav-scan"
               :src="
                 opacity < 1
-                  ? '/static/icon/search-black.png'
-                  : '/static/icon/search.png'
+                  ? '/static/icon/scan-black.png'
+                  : '/static/icon/scan-white.png'
               "
             ></image>
-            <swiper
-              class="search-swiper"
-              :style="{ color: opacity < 1 ? '#ccc' : '#ffffff' }"
-              circular
-              vertical
-              autoplay
+            <view
+              class="nav-search"
+              @click="goSearch"
+              :style="{
+                border: opacity < 1 ? '1rpx solid #ccc' : '1rpx solid #fff',
+              }"
             >
-              <swiper-item class="swiper-item">
-                <view class="swiper-item">家校有招</view>
-              </swiper-item>
-              <swiper-item class="swiper-item">
-                <view class="swiper-item">持仓赢好礼</view>
-              </swiper-item>
-              <swiper-item class="swiper-item">
-                <view class="swiper-item">流水打印</view>
-              </swiper-item>
-            </swiper>
+              <image
+                class="nav-search-icon"
+                :src="
+                  opacity < 1
+                    ? '/static/icon/search-black.png'
+                    : '/static/icon/search.png'
+                "
+              ></image>
+              <swiper
+                class="search-swiper"
+                :style="{ color: opacity < 1 ? '#ccc' : '#ffffff' }"
+                circular
+                vertical
+                autoplay
+              >
+                <swiper-item class="swiper-item">
+                  <view class="swiper-item">家校有招</view>
+                </swiper-item>
+                <swiper-item class="swiper-item">
+                  <view class="swiper-item">持仓赢好礼</view>
+                </swiper-item>
+                <swiper-item class="swiper-item">
+                  <view class="swiper-item">流水打印</view>
+                </swiper-item>
+              </swiper>
+            </view>
+            <image
+              class="nav-customer"
+              @click="goCustomer"
+              :src="
+                opacity < 1
+                  ? '/static/icon/icon5.png'
+                  : '/static/icon/icon5-w.png'
+              "
+            >
+            </image>
+            <image
+              @click="goMessage"
+              class="nav-message"
+              :src="
+                opacity < 1
+                  ? '/static/icon/msg-black.png'
+                  : '/static/icon/msg-white.png'
+              "
+            ></image>
           </view>
-          <image
-            class="nav-customer"
-            @click="goCustomer"
-            :src="
-              opacity < 1
-                ? '/static/icon/icon5.png'
-                : '/static/icon/icon5-w.png'
-            "
-          >
-          </image>
-          <image
-            @click="goMessage"
-            class="nav-message"
-            :src="
-              opacity < 1
-                ? '/static/icon/msg-black.png'
-                : '/static/icon/msg-white.png'
-            "
-          ></image>
-        </view>
-      </slot>
-    </navbar>
-    <view
-      class="main"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
-      :style="{ transform: `translateY(${touchMoveDistance}px)` }"
-    >
-      <image
+        </slot>
+      </navbar>
+      <view class="main">
+        <!-- <image
         class="header"
         src="/static/home/srollview-header.png"
         mode="widthFix"
-      ></image>
-      <!-- <view class="cate" :style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+440}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}"> -->
-      <view
-        class="cate"
-        :style="{
-          height: `${px2rpx(navBarHeight) + px2rpx(statusBarHeight) + 430}rpx`,
-          paddingTop: `${navBarHeight + statusBarHeight}px`,
-        }"
-      >
+      ></image> -->
+        <!-- <view class="cate" :style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+440}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}"> -->
         <view
-          class="item"
-          @click="goCate(item)"
-          v-for="(item, index) in cateList"
-          :key="index"
+          class="cate"
+          :style="{
+            height: `${
+              px2rpx(navBarHeight) + px2rpx(statusBarHeight) + 430
+            }rpx`,
+            paddingTop: `${navBarHeight + statusBarHeight}px`,
+          }"
         >
-          <image class="icon" :src="item.icon"></image>
-          <text>{{ item.name }}</text>
-        </view>
-        <view class="main-banner" @click="mainBanner"></view>
-      </view>
-      <view class="projects">
-        <view
-          class="item"
-          @click="goProjects(item)"
-          v-for="(item, index) in projects"
-          :key="index"
-        >
-          <image class="icon" :src="item.icon"></image>
-          <text>{{ item.name }}</text>
-        </view>
-      </view>
-      <view class="notice">
-        <swiper class="notice-swiper" circular vertical autoplay>
-          <swiper-item class="swiper-item">
-            <view class="swiper-item">理财收益受那些市场因素影响？</view>
-          </swiper-item>
-          <swiper-item class="swiper-item">
-            <view class="swiper-item">小招有财：2元现金红包待领取</view>
-          </swiper-item>
-        </swiper>
-      </view>
-      <view class="banner">
-        <swiper class="banner-swiper" circular autoplay>
-          <swiper-item
-            class="swiper-item"
-            v-for="item in bannarList"
-            :key="item.id"
-            @click="goBanner(item)"
+          <view
+            class="item"
+            @click="goCate(item)"
+            v-for="(item, index) in cateList"
+            :key="index"
           >
             <image class="icon" :src="item.icon"></image>
-          </swiper-item>
-        </swiper>
-      </view>
-      <view class="footer-page">
-        <!-- 财富精选 -->
-        <view class="caifu" @click="caifu"></view>
-        <!-- 借钱 -->
-        <view class="jieqian" @click="jieqian"></view>
-        <!-- 特色榜单 -->
-        <view class="specialtyList" @click="specialtyList"></view>
-        <!-- 生活特惠 -->
-        <view class="shenghuo">
-          <!-- 热映大片 -->
-          <view class="movie" @click="goHotMovie"></view>
-          <view class="module-row">
-            <!-- 碳寻星空 -->
-            <view class="tanxunxingkong" @click="goTanxunxingkong"></view>
-            <!-- 曹操出行 -->
-            <view class="caocaochuxing" @click="goCaocaochuxing"></view>
+            <text>{{ item.name }}</text>
+          </view>
+          <view class="main-banner" @click="mainBanner"></view>
+        </view>
+        <view class="projects">
+          <view
+            class="item"
+            @click="goProjects(item)"
+            v-for="(item, index) in projects"
+            :key="index"
+          >
+            <image class="icon" :src="item.icon"></image>
+            <text>{{ item.name }}</text>
           </view>
         </view>
-        <!-- 看点情报 -->
-        <view class="qingbao" @click="qingbao"></view>
-        <!-- pk话题 -->
-        <view class="pkht"></view>
-        <!-- 上证指数 -->
-        <view class="other">
-          <!-- 稳健人集合 -->
-          <view class="wjrjg" @click="goWjrjg"></view>
-          <view style="width: 50%">
-            <!-- 热门板块 -->
-            <view class="other-right" @click="goRmbk"></view>
-            <!-- 备老乘早 -->
-            <view class="other-right" @click="goBlcz"></view>
-          </view>
+        <view class="notice">
+          <swiper class="notice-swiper" circular vertical autoplay>
+            <swiper-item class="swiper-item">
+              <view class="swiper-item">理财收益受那些市场因素影响？</view>
+            </swiper-item>
+            <swiper-item class="swiper-item">
+              <view class="swiper-item">小招有财：2元现金红包待领取</view>
+            </swiper-item>
+          </swiper>
         </view>
-        <!-- 热议话题 -->
-        <view class="ryht" @click="reyi"></view>
+        <view class="banner">
+          <swiper class="banner-swiper" circular autoplay>
+            <swiper-item
+              class="swiper-item"
+              v-for="item in bannarList"
+              :key="item.id"
+              @click="goBanner(item)"
+            >
+              <image class="icon" :src="item.icon"></image>
+            </swiper-item>
+          </swiper>
+        </view>
+        <view class="footer-page">
+          <!-- 财富精选 -->
+          <view class="caifu" @click="caifu"></view>
+          <!-- 借钱 -->
+          <view class="jieqian" @click="jieqian"></view>
+          <!-- 特色榜单 -->
+          <view class="specialtyList" @click="specialtyList"></view>
+          <!-- 生活特惠 -->
+          <view class="shenghuo">
+            <!-- 热映大片 -->
+            <view class="movie" @click="goHotMovie"></view>
+            <view class="module-row">
+              <!-- 碳寻星空 -->
+              <view class="tanxunxingkong" @click="goTanxunxingkong"></view>
+              <!-- 曹操出行 -->
+              <view class="caocaochuxing" @click="goCaocaochuxing"></view>
+            </view>
+          </view>
+          <!-- 看点情报 -->
+          <view class="qingbao" @click="qingbao"></view>
+          <!-- pk话题 -->
+          <view class="pkht"></view>
+          <!-- 上证指数 -->
+          <view class="other">
+            <!-- 稳健人集合 -->
+            <view class="wjrjg" @click="goWjrjg"></view>
+            <view style="width: 50%">
+              <!-- 热门板块 -->
+              <view class="other-right" @click="goRmbk"></view>
+              <!-- 备老乘早 -->
+              <view class="other-right" @click="goBlcz"></view>
+            </view>
+          </view>
+          <!-- 热议话题 -->
+          <view class="ryht" @click="reyi"></view>
+        </view>
       </view>
     </view>
-    <u-popup mode="top" :show="showPageTwo" @close="pageClose" @open="pageOpen">
-      <view class="pages">
-        <image
-          class="page-image"
-          src="/static/pages/home-page-2.png"
-          mode="widthFix"
-        ></image>
-        <image
-          class="page-back"
-          src="/static/icon/back.png"
-          mode="widthFix"
-          @click="pageClose"
-        ></image>
-      </view>
-    </u-popup>
-  </view>
+  </scrollRefreshFloor>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import { px2rpx, navigateTo } from "@/utils/index.js";
+import scrollRefreshFloor from './scroll-refresh-floor.vue'
 export default {
   data() {
     return {
       px2rpx: px2rpx,
-      maxPullDistance: 300, // 最大下拉距离
-      touchMoveDistance: "0",
-      showPageTwo: false,
-      showNav: true,
       opacity: 1,
       bannarList: [
         {
@@ -306,12 +287,16 @@ export default {
       ],
     };
   },
+  components: {
+    scrollRefreshFloor
+  },
   computed: {
     ...mapState(["navBarHeight", "statusBarHeight"]),
   },
   onLoad() {},
   onPageScroll(e) {
     var scrollTop = e.scrollTop;
+    console.log(scrollTop);
     if (scrollTop >= this.navBarHeight) {
       this.opacity = 0;
       return;
@@ -323,71 +308,6 @@ export default {
   },
 
   methods: {
-    onTouchStart(e) {
-      this.startY = e.touches[0].clientY;
-      this.touchMoveDistance = 0;
-      this.rafing = false;
-    },
-
-    onTouchMove(e) {
-      const currentY = e.touches[0].clientY;
-      const diff = currentY - this.startY;
-
-      if (diff > 0) {
-        // 阻止默认滚动
-        e.preventDefault && e.preventDefault();
-
-        // 阻尼效果
-        let dampedDiff = this.damping(diff);
-
-        // if (dampedDiff - 50 < 0) dampedDiff = 0;
-
-        // this.touchMoveDistance = dampedDiff;
-
-        if (!this.rafing) {
-          this.rafing = true;
-          requestAnimationFrame(() => {
-            this.showNav = false;
-            this.touchMoveDistance = dampedDiff;
-            this.rafing = false;
-          });
-        }
-      }
-    },
-    onTouchEnd() {
-      if (this.touchMoveDistance >= 250) {
-        // 平滑归位，再展示 popup
-        this.touchMoveDistance = 200;
-        this.showNav = true;
-        setTimeout(() => {
-          this.showPageTwo = true;
-          uni.hideTabBar();
-          // requestAnimationFrame(() => {
-            this.touchMoveDistance = 0;
-          // });
-        }, 50);
-      } else {
-        this.touchMoveDistance = 0;
-        this.showNav = true;
-      }
-    },
-    // 阻尼函数
-    damping(x) {
-      const max = this.maxPullDistance;
-      return max * (1 - Math.exp(-x / max / 0.5));
-    },
-    pageClose() {
-      this.showPageTwo = false;
-      setTimeout(() => {
-        uni.showTabBar({ animation: false });
-      }, 250);
-    },
-    pageOpen() {
-      requestAnimationFrame(() => {
-        this.touchMoveDistance = 0;
-      });
-      // this.showPageTwo = true;
-    },
     goSearch() {
       navigateTo({
         url: `/pages/search/search`,
@@ -403,7 +323,7 @@ export default {
       //   url: `/pages/borrowMoney/borrowMoney`,
       // });
       navigateTo({
-        url: `/pages/index/jieQian/jieQian`,
+        url: `/pages/commonNoNavPages/commonNoNavPages?pageImage=/static/pages/jieqian.png`,
       });
     },
     specialtyList() {
@@ -501,6 +421,9 @@ export default {
         url: `/pages/commonPages/commonPages?pageImage=/static/pages/tanxunxingkong.png&title=碳寻星空&serviceBtn=${false}&shareBtn=${true}`,
       });
     },
+    openFloor() {
+      uni.hideTabBar({ animation: false });
+    }
   },
 };
 </script>
@@ -516,9 +439,6 @@ export default {
   min-height: 400rpx;
   position: relative;
   background-color: #f8f8f7;
-  will-change: transform;
-  transform: translateZ(0);
-  transition: transform 0.16s ease-out;
 }
 
 .header {
@@ -781,25 +701,6 @@ export default {
 
   .module-row {
     display: flex;
-  }
-}
-
-.pages {
-  width: 750rpx;
-  height: auto;
-  overflow-y: auto;
-  position: relative;
-
-  .page-image {
-    width: 750rpx;
-    height: auto;
-  }
-
-  .page-back {
-    position: absolute;
-    top: 40rpx;
-    left: 20rpx;
-    width: 70rpx;
   }
 }
 </style>

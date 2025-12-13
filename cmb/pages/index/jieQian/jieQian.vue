@@ -3,7 +3,7 @@
     <view class="pages">
       <image
         class="page-image"
-        src="/static/pages/hotMovie.png"
+        src="/static/pages/jieqian.png"
         mode="widthFix"
       ></image>
       <view class="back" @click="goBack"></view>
@@ -60,9 +60,9 @@ export default {
 
   .address {
     position: absolute;
-    top: 88rpx;
-    left: 100rpx;
-    font-size: 32rpx;
+    top: 670rpx;
+    right: 100rpx;
+    font-size: 30rpx;
   }
 }
 </style>
