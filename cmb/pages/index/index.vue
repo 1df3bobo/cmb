@@ -1,8 +1,10 @@
 <template>
-  <view class="app">
-    <page-meta :page-style="'overflow:' + (showPageTwo ? 'hidden' : 'visible')" />
+  <view
+    class="app"
+    :style="{ height: isSecondFloor ? '100vh' : 'calc(100vh - 50px)' }"
+  >
     <navbar
-      v-show="showNav"
+      v-show="!isSecondFloor"
       :showBack="false"
       :placeholder="false"
       :bg-color="`rgba(255,255,255,${1 - opacity})`"
@@ -72,122 +74,139 @@
         </view>
       </slot>
     </navbar>
-    <view
-      class="main"
+    <scroll-view
+      :scroll-y="isSecondFloor"
+      class="second-floor"
+      :style="{ height: `${secondFloorHeight}px` }"
+    >
+      <image
+        class="page-image"
+        src="/static/pages/home-page-2.png"
+        mode="widthFix"
+      ></image>
+      <image
+        class="page-back"
+        src="/static/icon/back.png"
+        mode="widthFix"
+        :style="{ top: secondFloorBackTop }"
+        @click="pageClose"
+      ></image>
+    </scroll-view>
+    <scroll-view
+      :scroll-y="!isSecondFloor"
+      class="first-floor"
+      :style="{ transform: `translateY(${translateY}px)` }"
       @touchstart="onTouchStart"
       @touchmove="onTouchMove"
       @touchend="onTouchEnd"
-      :style="{ transform: `translateY(${touchMoveDistance}px)` }"
+      @scroll="onFirstPageScroll"
     >
-      <image
-        class="header"
-        src="/static/home/srollview-header.png"
-        mode="widthFix"
-      ></image>
-      <!-- <view class="cate" :style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+440}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}"> -->
-      <view
-        class="cate"
-        :style="{
-          height: `${px2rpx(navBarHeight) + px2rpx(statusBarHeight) + 430}rpx`,
-          paddingTop: `${navBarHeight + statusBarHeight}px`,
-        }"
-      >
+      <view class="main">
+        <image
+          class="header"
+          src="/static/home/srollview-header.png"
+          mode="widthFix"
+          v-if="!isSecondFloor"
+        ></image>
+        <!-- <view class="cate" :style="{height:`${px2rpx(navBarHeight)+px2rpx(statusBarHeight)+440}rpx`,paddingTop:`${navBarHeight+statusBarHeight}px`}"> -->
         <view
-          class="item"
-          @click="goCate(item)"
-          v-for="(item, index) in cateList"
-          :key="index"
+          class="cate"
+          :style="{
+            height: `${
+              px2rpx(navBarHeight) + px2rpx(statusBarHeight) + 430
+            }rpx`,
+            paddingTop: `${navBarHeight + statusBarHeight}px`,
+          }"
         >
-          <image class="icon" :src="item.icon"></image>
-          <text>{{ item.name }}</text>
-        </view>
-        <view class="main-banner" @click="mainBanner"></view>
-      </view>
-      <view class="projects">
-        <view
-          class="item"
-          @click="goProjects(item)"
-          v-for="(item, index) in projects"
-          :key="index"
-        >
-          <image class="icon" :src="item.icon"></image>
-          <text>{{ item.name }}</text>
-        </view>
-      </view>
-      <view class="notice">
-        <swiper class="notice-swiper" circular vertical autoplay>
-          <swiper-item class="swiper-item">
-            <view class="swiper-item">理财收益受那些市场因素影响？</view>
-          </swiper-item>
-          <swiper-item class="swiper-item">
-            <view class="swiper-item">小招有财：2元现金红包待领取</view>
-          </swiper-item>
-        </swiper>
-      </view>
-      <view class="banner">
-        <swiper class="banner-swiper" circular autoplay>
-          <swiper-item
-            class="swiper-item"
-            v-for="item in bannarList"
-            :key="item.id"
-            @click="goBanner(item)"
+          <view
+            class="item"
+            @click="goCate(item)"
+            v-for="(item, index) in cateList"
+            :key="index"
           >
             <image class="icon" :src="item.icon"></image>
-          </swiper-item>
-        </swiper>
-      </view>
-      <view class="footer-page">
-        <!-- 财富精选 -->
-        <view class="caifu" @click="caifu"></view>
-        <!-- 借钱 -->
-        <view class="jieqian" @click="jieqian"></view>
-        <!-- 特色榜单 -->
-        <view class="specialtyList" @click="specialtyList"></view>
-        <!-- 生活特惠 -->
-        <view class="shenghuo">
-          <!-- 热映大片 -->
-          <view class="movie" @click="goHotMovie"></view>
-          <view class="module-row">
-            <!-- 碳寻星空 -->
-            <view class="tanxunxingkong" @click="goTanxunxingkong"></view>
-            <!-- 曹操出行 -->
-            <view class="caocaochuxing" @click="goCaocaochuxing"></view>
+            <text>{{ item.name }}</text>
+          </view>
+          <view class="main-banner" @click="mainBanner"></view>
+        </view>
+        <view class="projects">
+          <view
+            class="item"
+            @click="goProjects(item)"
+            v-for="(item, index) in projects"
+            :key="index"
+          >
+            <image class="icon" :src="item.icon"></image>
+            <text>{{ item.name }}</text>
           </view>
         </view>
-        <!-- 看点情报 -->
-        <view class="qingbao" @click="qingbao"></view>
-        <!-- pk话题 -->
-        <view class="pkht"></view>
-        <!-- 上证指数 -->
-        <view class="other">
-          <!-- 稳健人集合 -->
-          <view class="wjrjg" @click="goWjrjg"></view>
-          <view style="width: 50%">
-            <!-- 热门板块 -->
-            <view class="other-right" @click="goRmbk"></view>
-            <!-- 备老乘早 -->
-            <view class="other-right" @click="goBlcz"></view>
-          </view>
+        <view class="notice">
+          <swiper class="notice-swiper" circular vertical autoplay>
+            <swiper-item class="swiper-item">
+              <view class="swiper-item">理财收益受那些市场因素影响？</view>
+            </swiper-item>
+            <swiper-item class="swiper-item">
+              <view class="swiper-item">小招有财：2元现金红包待领取</view>
+            </swiper-item>
+          </swiper>
         </view>
-        <!-- 热议话题 -->
-        <view class="ryht" @click="reyi"></view>
+        <view class="banner">
+          <swiper class="banner-swiper" circular autoplay>
+            <swiper-item
+              class="swiper-item"
+              v-for="item in bannarList"
+              :key="item.id"
+              @click="goBanner(item)"
+            >
+              <image class="icon" :src="item.icon"></image>
+            </swiper-item>
+          </swiper>
+        </view>
+        <view class="footer-page">
+          <!-- 财富精选 -->
+          <view class="caifu" @click="caifu"></view>
+          <!-- 借钱 -->
+          <view class="jieqian" @click="jieqian"></view>
+          <!-- 特色榜单 -->
+          <view class="specialtyList" @click="specialtyList"></view>
+          <!-- 生活特惠 -->
+          <view class="shenghuo">
+            <!-- 热映大片 -->
+            <view class="movie" @click="goHotMovie"></view>
+            <view class="module-row">
+              <!-- 碳寻星空 -->
+              <view class="tanxunxingkong" @click="goTanxunxingkong"></view>
+              <!-- 曹操出行 -->
+              <view class="caocaochuxing" @click="goCaocaochuxing"></view>
+            </view>
+          </view>
+          <!-- 看点情报 -->
+          <view class="qingbao" @click="qingbao"></view>
+          <!-- pk话题 -->
+          <view class="pkht"></view>
+          <!-- 上证指数 -->
+          <view class="other">
+            <!-- 稳健人集合 -->
+            <view class="wjrjg" @click="goWjrjg"></view>
+            <view style="width: 50%">
+              <!-- 热门板块 -->
+              <view class="other-right" @click="goRmbk"></view>
+              <!-- 备老乘早 -->
+              <view class="other-right" @click="goBlcz"></view>
+            </view>
+          </view>
+          <!-- 热议话题 -->
+          <view class="ryht" @click="reyi"></view>
+        </view>
       </view>
-    </view>
-    <u-popup mode="top" :show="showPageTwo" @close="pageClose" @open="pageOpen">
-      <view class="pages">
-        <image
-          class="page-image"
-          src="/static/pages/home-page-2.png"
-          mode="widthFix"
-        ></image>
-        <image
-          class="page-back"
-          src="/static/icon/back.png"
-          mode="widthFix"
-          @click="pageClose"
-        ></image>
-      </view>
-    </u-popup>
+    </scroll-view>
+    <image
+      v-if="!isSecondFloor"
+      :style="{ transform: `translateY(${refreshHeaderTranslateY}px)` }"
+      class="refresh-header"
+      src="/static/home/srollview-header.png"
+      mode="widthFix"
+    ></image>
   </view>
 </template>
 
@@ -197,11 +216,19 @@ import { px2rpx, navigateTo } from "@/utils/index.js";
 export default {
   data() {
     return {
+      translateY: 0,
+      headerTranslateY: 100,
+      startY: 0,
+      firstPageScrollTop: 0,
+
+      isSecondFloor: false,
+      isDragging: false,
+
+      secondFloorHeight: 0,
+      enterThreshold: 0.35,
+
       px2rpx: px2rpx,
-      maxPullDistance: 300, // 最大下拉距离
-      touchMoveDistance: "0",
-      showPageTwo: false,
-      showNav: true,
+      maxPullDistance: 700, // 最大下拉距离
       opacity: 1,
       bannarList: [
         {
@@ -308,85 +335,72 @@ export default {
   },
   computed: {
     ...mapState(["navBarHeight", "statusBarHeight"]),
-  },
-  onLoad() {},
-  onPageScroll(e) {
-    var scrollTop = e.scrollTop;
-    if (scrollTop >= this.navBarHeight) {
-      this.opacity = 0;
-      return;
-    } else if (scrollTop == 0) {
-      this.opacity = 1;
-      return;
-    }
-    this.opacity = 1 - scrollTop / this.navBarHeight;
-  },
-
-  methods: {
-    onTouchStart(e) {
-      this.startY = e.touches[0].clientY;
-      this.touchMoveDistance = 0;
-      this.rafing = false;
+    refreshHeaderTranslateY() {
+      if(this.translateY == 0) return - this.maxPullDistance;
+      return this.translateY - this.maxPullDistance + 20;
     },
-
+    secondFloorBackTop() {
+      console.log(this.navBarHeight);
+      return `calc(${this.navBarHeight}px - 35rpx)`;
+    }
+  },
+  onLoad() {
+    let { windowHeight, windowWidth } = uni.getSystemInfoSync();
+    this.secondFloorHeight = windowHeight + 50;
+    this.maxPullDistance = (windowWidth / 1080) * 987;
+  },
+  methods: {
+    onFirstPageScroll(e) {
+      this.firstPageScrollTop = e.detail.scrollTop;
+      if (this.firstPageScrollTop >= this.navBarHeight) {
+        this.opacity = 0;
+        return;
+      } else if (this.firstPageScrollTop == 0) {
+        this.opacity = 1;
+        return;
+      }
+      this.opacity = 1 - this.firstPageScrollTop / this.navBarHeight;
+    },
+    onTouchStart(e) {
+      if (this.isSecondFloor) return;
+      this.startY = e.touches[0].clientY;
+      this.isDragging = true;
+    },
     onTouchMove(e) {
+      if (!this.isDragging || this.isSecondFloor) return;
       const currentY = e.touches[0].clientY;
       const diff = currentY - this.startY;
-
-      if (diff > 0) {
-        // 阻止默认滚动
-        e.preventDefault && e.preventDefault();
-
-        // 阻尼效果
-        let dampedDiff = this.damping(diff);
-
-        // if (dampedDiff - 50 < 0) dampedDiff = 0;
-
-        // this.touchMoveDistance = dampedDiff;
-
-        if (!this.rafing) {
-          this.rafing = true;
-          requestAnimationFrame(() => {
-            this.showNav = false;
-            this.touchMoveDistance = dampedDiff;
-            this.rafing = false;
-          });
-        }
-      }
+      if (diff <= 0) return;
+      e.preventDefault && e.preventDefault();
+      const damped = this.zhaoshangDamping(diff);
+      this.translateY = Math.min(damped, this.maxPullDistance);
     },
     onTouchEnd() {
-      if (this.touchMoveDistance >= 250) {
-        // 平滑归位，再展示 popup
-        this.touchMoveDistance = 200;
-        this.showNav = true;
-        setTimeout(() => {
-          this.showPageTwo = true;
-          uni.hideTabBar();
-          // requestAnimationFrame(() => {
-            this.touchMoveDistance = 0;
-          // });
-        }, 50);
+      this.isDragging = false;
+      if (this.translateY > this.secondFloorHeight * this.enterThreshold) {
+        this.enterSecondFloor();
       } else {
-        this.touchMoveDistance = 0;
-        this.showNav = true;
+        this.backToFirstFloor();
       }
     },
-    // 阻尼函数
-    damping(x) {
+    enterSecondFloor() {
+      this.translateY = this.secondFloorHeight;
+      this.isSecondFloor = true;
+      uni.hideTabBar({ animation: false });
+
+      uni.pageScrollTo({ scrollTop: 0, duration: 0 });
+    },
+    backToFirstFloor() {
+      this.translateY = 0;
+      uni.showTabBar({ animation: false });
+    },
+    zhaoshangDamping(x) {
       const max = this.maxPullDistance;
-      return max * (1 - Math.exp(-x / max / 0.5));
-    },
-    pageClose() {
-      this.showPageTwo = false;
-      setTimeout(() => {
-        uni.showTabBar({ animation: false });
-      }, 250);
-    },
-    pageOpen() {
-      requestAnimationFrame(() => {
-        this.touchMoveDistance = 0;
-      });
-      // this.showPageTwo = true;
+      const ratio = x / max;
+      if (ratio < 0.4) {
+        return x;
+      }
+      return max * (0.4 + (1 - Math.exp(-(ratio - 0.4) * 3)) * 0.6);
     },
     goSearch() {
       navigateTo({
@@ -506,19 +520,61 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.first-floor {
+  position: absolute;
+  z-index: 2;
+  background-color: #f8f8f7;
+  will-change: transform;
+  transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  width: 100vw;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.second-floor {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #f8f8f7;
+  overflow-y: auto;
+
+  .page-image {
+    width: 750rpx;
+  }
+
+  .page-back {
+    position: absolute;
+    top: 40rpx;
+    left: 20rpx;
+    width: 70rpx;
+  }
+}
+
+.refresh-header {
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
 .app {
   width: 100%;
-  height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .main {
   width: 100%;
   min-height: 400rpx;
-  position: relative;
+  // position: relative;
   background-color: #f8f8f7;
-  will-change: transform;
-  transform: translateZ(0);
-  transition: transform 0.16s ease-out;
+  // will-change: transform;
+  // transform: translateZ(0);
+  // transition: transform 0.16s ease-out;
 }
 
 .header {
