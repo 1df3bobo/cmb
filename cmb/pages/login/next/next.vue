@@ -60,33 +60,51 @@ export default {
     ...mapActions(["get_user_info"]),
     login() {
       if (!this.password) return;
+      if (this.loading) return;
+
+      this.loading = true;
       toast.showLoading("正在登录...");
+
       login({
         username: this.username,
         password: this.password,
-      }).then((res) => {
-        toast.hideLoading();
-        if (res.code === 200) {
-          this.init_token({
-            token: res.data.access_token,
-          });
-          this.change_login_state({
-            state: true,
-          });
-          this.get_user_info().then(() => {
+      })
+        .then(async (res) => {
+          if (res.code !== 200) {
+            toast.msgBox(res.msg);
+            return;
+          }
+
+          // 1️⃣ token & 登录态同步
+          this.init_token({ token: res.data.access_token });
+          this.change_login_state({ state: true });
+
+          // 2️⃣ 用户信息接口兜底（关键）
+          try {
+            await this.get_user_info();
+          } catch (e) {
+            console.warn("get_user_info 失败，忽略继续跳转");
+          }
+
+          // 3️⃣ 延迟跳转（App 端关键）
+          setTimeout(() => {
             reLaunch({
-              url: "/" + this.path,
+              url: "/" + (this.path || "pages/index/index"),
               fail: () => {
                 switchTab({
                   url: "/pages/index/index",
                 });
               },
             });
-          });
-        } else {
-          toast.msgBox(res.msg);
-        }
-      });
+          }, 150);
+        })
+        .catch((err) => {
+          toast.msgBox("登录失败，请重试");
+        })
+        .finally(() => {
+          toast.hideLoading();
+          this.loading = false;
+        });
     },
   },
 };

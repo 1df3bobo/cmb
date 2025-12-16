@@ -1,7 +1,7 @@
 <template>
   <view
     class="app"
-    :style="{ height: isSecondFloor ? '100vh' : 'calc(100vh - 50px)' }"
+    :class="!isSecondFloor ? 'page-one':''"
   >
     <navbar
       v-show="!isSecondFloor"
@@ -350,6 +350,11 @@ export default {
     this.maxPullDistance = (windowWidth / 1080) * 987;
   },
   methods: {
+    pageClose() {
+      this.isSecondFloor = false;
+      this.translateY = 0;
+      uni.showTabBar({ animation: false });
+    },
     onFirstPageScroll(e) {
       this.firstPageScrollTop = e.detail.scrollTop;
       if (this.firstPageScrollTop >= this.navBarHeight) {
@@ -565,6 +570,13 @@ export default {
   width: 100%;
   position: relative;
   overflow: hidden;
+  height: 100vh;
+}
+
+.page-one {
+  // #ifdef H5
+  height: calc(100vh - 50px);
+  // #endif
 }
 
 .main {

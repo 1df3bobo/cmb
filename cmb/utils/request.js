@@ -13,8 +13,8 @@ const options = {
 		'content-type': 'application/json',
     'Access-Control-Allow-Origin':'*',
 	},
-  baseUrl: 'http://api.chinajianse.com'
-	// baseUrl: '/api'
+  // baseUrl: 'http://api.chinajianse.com'
+	baseUrl: '/api'
 }
 
 /*
@@ -37,7 +37,6 @@ const request = (url, data = {}, loading = false, method = 'POST') => {
 				...options.header,
 				'Authorization': store.state.token,
 				'client_type': 'APP',
-				'Authorization': store.state.token,
 				'BANKTYPE': '7'
 			},
 			timeout: options.timeout,
