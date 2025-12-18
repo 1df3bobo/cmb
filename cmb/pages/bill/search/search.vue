@@ -153,8 +153,9 @@
   },
   methods: {
    goDetails(details) {
+    uni.setStorageSync('billDetail', details);
     navigateTo({
-     url: '/pages/bill/details/details?details=' + JSON.stringify(details)
+     url: '/pages/bill/details/details'
     })
    },
    selectTabs(item) {

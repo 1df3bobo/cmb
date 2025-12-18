@@ -333,11 +333,12 @@ export default {
       minAmount: null,
       maxAmount: null,
       list: [],
-      nextReponse: {}, //提前请求下一次的数据，优化
+      nextList: [], // 下一次的预加载数据
       totalPage: 1,
       activeTitle: 1,
       status: "loading",
       endPageTime: "",
+      nextEndPageTime: "", // 因为做了预加载 这个参数不能记录预加载的一个入参 activeTitle == 2有用
       totalKeyList: "",
       queryTime: "",
       orderSort: "", // 1金额倒叙 2金额正序
@@ -366,19 +367,17 @@ export default {
   onPageScroll(e) {
     if (this.activeTitle == 1) {
       this.list.forEach((item, index) => {
-        // if(item.month) {
-          const query = uni.createSelectorQuery().in(this);
-          query
-            .select("#item-" + index)
-            .boundingClientRect((rect) => {
-              if (rect.top <= 0 && rect.bottom >= 0) {
-                if (item.day) {
-                  this.$set(this.selectDate, "text", item.day);
-                }
+        const query = uni.createSelectorQuery().in(this);
+        query
+          .select("#item-" + index)
+          .boundingClientRect((rect) => {
+            if (rect.top <= 0 && rect.bottom >= 0) {
+              if (item.day) {
+                this.$set(this.selectDate, "text", item.day);
               }
-            })
-            .exec();
-        // }
+            }
+          })
+          .exec();
       });
     }
   },
@@ -440,18 +439,46 @@ export default {
     this.getBillPage();
   },
   onReachBottom() {
-    if (this.pageNum == this.totalPage) {
-      this.status = "nomore";
-      return;
-    }
-    this.status = "loading";
-    if (this.activeTitle == 1) {
-      this.formatBillDataResponse(this.nextReponse);
+    // 只要预加载列表中有值先加入列表
+    if(this.activeTitle == 1) {
+      if (this.nextList.length > 0) {
+        this.list = [...this.list, ...this.nextList];
+        this.nextList = [];
+      }
+      if (this.pageNum == this.totalPage) {
+        this.status = "nomore";
+        return;
+      }
+      this.status = "loading";
+      this.getBillPage();
     }else {
-      this.formatBillPageRangePaymentResponse(this.nextReponse);
-      this.pageNum = this.pageNum + 1;
+      if (this.nextEndPageTime) {
+        this.endPageTime = this.nextEndPageTime;
+        this.nextEndPageTime = "";
+      }
+      if (this.nextList.length > 0) {
+        this.list = [...this.list, ...this.nextList];
+        this.nextList = [];
+        this.status = "loading";
+        this.getBillPage();
+      }
     }
-    this.getBillPage();
+
+
+    // if (this.nextList.length > 0) {
+    //   this.list = [...this.list, ...this.nextList];
+    //   this.nextList = [];
+    // }
+    // if (this.pageNum == this.totalPage) {
+    //   this.status = "nomore";
+    //   return;
+    // }
+    // if (this.activeTitle == 2 && this.nextEndPageTime) {
+    //   this.endPageTime = this.nextEndPageTime;
+    //   this.nextEndPageTime = "";
+    // }
+    // this.status = "loading";
+    // this.getBillPage();
   },
   methods: {
     accountBook() {
@@ -511,6 +538,7 @@ export default {
       this.status = "loading";
       this.pageNum = 1;
       this.endPageTime = "";
+      this.nextEndPageTime = "";
       this.list = [];
       this.getBillPage();
     },
@@ -526,43 +554,8 @@ export default {
       }
       this.totalKeyList = "";
       this.endPageTime = "";
+      this.nextEndPageTime = "";
       this.getBillPage();
-    },
-    formatBillDataResponse(res) {
-      if (res.code === 200) {
-        this.list = [...this.list, ...res.data.list];
-        this.totalPage = res.data.pages;
-        this.totalKeyList = res.data.customizeParam.totalKeyList;
-        this.queryTime = res.data.customizeParam.queryTime;
-        this.pageNum = res.data.customizeParam.pageNum;
-        if (this.totalPage == 1) {
-          this.status = "nomore";
-        } else {
-          this.status = "loadmore";
-        }
-      } else {
-        this.status = "loadmore";
-      }
-    },
-    formatBillPageRangePaymentResponse(res) {
-      if (res.code === 200) {
-        this.list = [...this.list, ...res.data.list];
-        if (this.pageNum <= 1) {
-          this.billRangeData = res.data;
-        }
-        this.totalPage = res.data.pages;
-        if (res.data.list.length > 0) {
-          this.endPageTime =
-            res.data.list[res.data.list.length - 1].transactionTime;
-        }
-        if (this.totalPage == 1) {
-          this.status = "nomore";
-        } else {
-          this.status = "loadmore";
-        }
-      } else {
-        this.status = "loadmore";
-      }
     },
     getBillPage() {
       if (this.activeTitle == 1) {
@@ -576,12 +569,28 @@ export default {
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
         }).then((res) => {
-          if(this.pageNum == 1) {
-            this.formatBillDataResponse(res);
-            // 第一页请求第二页的
-            this.getBillPage();
-          }else {
-            this.nextReponse = res;
+          if (res.code === 200) {
+            if (this.pageNum == 1) {
+              this.list = [...res.data.list];
+              this.totalPage = res.data.pages;
+              this.totalKeyList = res.data.customizeParam.totalKeyList;
+              this.queryTime = res.data.customizeParam.queryTime;
+              this.pageNum = res.data.customizeParam.pageNum;
+              if (this.totalPage == 1 || this.totalPage == this.pageNum) {
+                this.status = "nomore";
+              } else {
+                this.status = "loadmore";
+                this.getBillPage();
+              }
+            } else {
+              this.nextList = [...res.data.list];
+              this.totalPage = res.data.pages;
+              this.totalKeyList = res.data.customizeParam.totalKeyList;
+              this.queryTime = res.data.customizeParam.queryTime;
+              this.pageNum = res.data.customizeParam.pageNum;
+            }
+          } else {
+            this.status = "loadmore";
           }
         });
       } else {
@@ -596,13 +605,37 @@ export default {
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
         }).then((res) => {
-          if(this.pageNum == 1) {
-            this.formatBillPageRangePaymentResponse(res);
-            // 第一页请求第二页的
-            this.pageNum = 2;
-            this.getBillPage();
-          }else {
-            this.nextReponse = res;
+          if (res.code === 200) {
+            if (this.pageNum == 1) {
+              this.list = [...res.data.list];
+              this.billRangeData = res.data;
+              this.totalPage = res.data.pages;
+              if (res.data.list.length > 0) {
+                this.endPageTime =
+                  res.data.list[res.data.list.length - 1].transactionTime;
+              }
+              if (this.totalPage == 1) {
+                this.status = "nomore";
+              } else {
+                this.pageNum = this.pageNum + 1;
+                this.status = "loadmore";
+              }
+              if(res.data.total != 0) {
+                this.getBillPage();
+              }
+            }else{
+              this.nextList = [...res.data.list];
+              this.totalPage = res.data.pages;
+              if (res.data.list.length > 0) {
+                this.pageNum = this.pageNum + 1;
+                this.nextEndPageTime =
+                  res.data.list[res.data.list.length - 1].transactionTime;
+              }else{
+                this.status = "nomore";
+              }
+            }
+          } else {
+            this.status = "loadmore";
           }
         });
       }

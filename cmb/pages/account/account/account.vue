@@ -6,7 +6,7 @@
 		<view class="main"
 			:style="{backgroundImage:type==1? 'url(/static/home/account-header.png)':'url(/static/home/account-header1.png)'}">
 			<view class="account" :style="{paddingLeft:type==1?'60rpx':'50rpx'}">
-				<view class="left">
+				<view class="left" @click.stop="goRecord">
 					<view class="big" v-show="type == 1">
 						<!-- <view class="title">总资产</view> -->
 						<view class="money">
@@ -17,7 +17,7 @@
 						</view>
 						<view class="btn" @click="commonPages('/pages/account/income/income')"></view>
 					</view>
-					<view class="small" @click="type = 1" v-if="type == 2">
+					<view class="small" @click.stop="type = 1" v-if="type == 2">
 						<!-- <view class="title small-title">总资产</view> -->
 						<view class="money  small-money">
 							<view class="money-integer">{{formatAmount(numberParts(userInfo.accountBalance).integer)}}
@@ -166,7 +166,14 @@
 			},
 			changeExpand() {
 				this.isexpand = !this.isexpand
-			}
+			},
+      goRecord() {
+        if(this.type == 1) {
+          navigateTo({
+            url: '/pages/account/record/record'
+          })
+        }
+      }
 		}
 	}
 </script>

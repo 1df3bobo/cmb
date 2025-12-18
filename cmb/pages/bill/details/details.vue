@@ -144,13 +144,15 @@ export default {
     };
   },
   onLoad(op) {
-    if (op.details) {
-      this.details = JSON.parse(op.details);
+    this.details = uni.getStorageSync('billDetail');
+    uni.clearStorageSync();
+    // if (op.details) {
+    //   this.details = JSON.parse(op.details);
       this.classify = {
         icon: this.details.categoryIcon,
         name: this.details.transactionCategory,
       };
-    }
+    // }
   },
   computed: {
     momneyStr() {

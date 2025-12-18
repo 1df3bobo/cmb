@@ -198,6 +198,7 @@
 				})
 			},
 			async init(data = {}) {
+        console.log(this.$refs.chartRef);
 				// chart 图表实例不能存在data里
 				this.chart = await this.$refs.chartRef.init(echarts);
 				let chart = this.chart

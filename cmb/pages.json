@@ -118,6 +118,13 @@
 				"navigationBarTitleText" : ""
 			}
 		},
+    {
+			"path" : "pages/account/record/record",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
 		{
 			"path" : "pages/water/water/water",
 			"style" : 
@@ -561,6 +568,13 @@
 		},
 		{
 			"path" : "pages/account/income/income",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+    {
+			"path" : "pages/account/record/record",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
