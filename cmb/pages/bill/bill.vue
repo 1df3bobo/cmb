@@ -366,19 +366,17 @@ export default {
   onPageScroll(e) {
     if (this.activeTitle == 1) {
       this.list.forEach((item, index) => {
-        // if(item.month) {
+        if(item.month) {
           const query = uni.createSelectorQuery().in(this);
           query
             .select("#item-" + index)
             .boundingClientRect((rect) => {
               if (rect.top <= 0 && rect.bottom >= 0) {
-                if (item.day) {
-                  this.$set(this.selectDate, "text", item.day);
-                }
+                this.$set(this.selectDate, "text", `${item.year}.${item.month}`);
               }
             })
             .exec();
-        // }
+        }
       });
     }
   },
@@ -437,7 +435,7 @@ export default {
         : currentDate.getMonth() + 1;
     this.$set(this.selectDate, "text", `${currentYear}.${currentMonth}`);
     this.queryTime = this.selectDate.text.replace(".", "-").replace("月", "");
-    this.getBillPage();
+    this.getBillPage(true);
   },
   onReachBottom() {
     if (this.pageNum == this.totalPage) {
@@ -451,7 +449,7 @@ export default {
       this.formatBillPageRangePaymentResponse(this.nextReponse);
       this.pageNum = this.pageNum + 1;
     }
-    this.getBillPage();
+    this.getBillPage(false);
   },
   methods: {
     accountBook() {
@@ -493,15 +491,18 @@ export default {
     moneySort() {
       if (this.orderSort) {
         this.orderSort = "";
-        this.getBillPage();
+        this.pageNum = 1;
+        this.getBillPage(true);
         return;
       }
       this.orderSort = "1";
-      this.getBillPage();
+      this.pageNum = 1;
+      this.getBillPage(true);
     },
     bankCardChange(value) {
       this.bankCard = value.name;
-      this.getBillPage();
+      this.pageNum = 1;
+      this.getBillPage(true);
     },
     billFilter(value) {
       this.transactionCategory = value.valueStr;
@@ -512,7 +513,7 @@ export default {
       this.pageNum = 1;
       this.endPageTime = "";
       this.list = [];
-      this.getBillPage();
+      this.getBillPage(true);
     },
     timeChange(e) {
       // 时间选择
@@ -526,7 +527,7 @@ export default {
       }
       this.totalKeyList = "";
       this.endPageTime = "";
-      this.getBillPage();
+      this.getBillPage(true);
     },
     formatBillDataResponse(res) {
       if (res.code === 200) {
@@ -564,7 +565,7 @@ export default {
         this.status = "loadmore";
       }
     },
-    getBillPage() {
+    getBillPage(flag) {
       if (this.activeTitle == 1) {
         getBillPage({
           pageSize: this.pageSize,
