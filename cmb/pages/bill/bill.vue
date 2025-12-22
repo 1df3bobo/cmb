@@ -210,7 +210,7 @@
             v-if="item.billDetail"
             @click="goDetails(item, item.icon)"
           >
-            <view class="bill-time" v-if="item.day">
+            <view class="bill-time" v-if="item.day && orderSort == ''">
               {{ item.day }}
             </view>
             <u-swipe-action>
@@ -228,8 +228,13 @@
                     <view class="bill-money">{{ momneyStr(item.amount) }}</view>
                   </view>
                   <view class="bill-bottom">
-                    <view class="bill-bank-card">{{ item.bankCard }}</view>
-                    <view class="bill-bottom-time">{{ item.time }}</view>
+                    <view class="bill-bank-card">{{
+                      item.bankCard.slice(0, 3) + item.bankCard.slice(4)
+                    }}</view>
+                    <view class="bill-bottom-time">{{
+                      item.billDetail &&
+                      item.billDetail.transactionTime.substring(10, 16)
+                    }}</view>
                     <view class="bill-bottom-balance"
                       >余额:￥{{ formatAmount(item.accountBalance) }}
                     </view>
@@ -333,7 +338,7 @@ export default {
       minAmount: null,
       maxAmount: null,
       list: [],
-      nextReponse: {}, //提前请求下一次的数据，优化
+      // nextReponse: {}, //提前请求下一次的数据，优化
       totalPage: 1,
       activeTitle: 1,
       status: "loading",
@@ -366,13 +371,17 @@ export default {
   onPageScroll(e) {
     if (this.activeTitle == 1) {
       this.list.forEach((item, index) => {
-        if(item.month) {
+        if (item.month) {
           const query = uni.createSelectorQuery().in(this);
           query
             .select("#item-" + index)
             .boundingClientRect((rect) => {
               if (rect.top <= 0 && rect.bottom >= 0) {
-                this.$set(this.selectDate, "text", `${item.year}.${item.month}`);
+                this.$set(
+                  this.selectDate,
+                  "text",
+                  `${item.year}.${item.month}`
+                );
               }
             })
             .exec();
@@ -435,21 +444,19 @@ export default {
         : currentDate.getMonth() + 1;
     this.$set(this.selectDate, "text", `${currentYear}.${currentMonth}`);
     this.queryTime = this.selectDate.text.replace(".", "-").replace("月", "");
-    this.getBillPage(true);
+    this.getBillPage();
   },
   onReachBottom() {
     if (this.pageNum == this.totalPage) {
       this.status = "nomore";
       return;
     }
-    this.status = "loading";
-    if (this.activeTitle == 1) {
-      this.formatBillDataResponse(this.nextReponse);
-    }else {
-      this.formatBillPageRangePaymentResponse(this.nextReponse);
+    if (this.activeTitle == 2) {
       this.pageNum = this.pageNum + 1;
     }
-    this.getBillPage(false);
+    this.status = "loading";
+
+    this.getBillPage();
   },
   methods: {
     accountBook() {
@@ -476,7 +483,7 @@ export default {
     goDetails(item, icon) {
       const details = item.billDetail;
       details.amount = item.amount;
-      uni.setStorageSync('billDetail', details);
+      uni.setStorageSync("billDetail", details);
       navigateTo({
         url: `/pages/bill/details/details`,
       });
@@ -492,17 +499,17 @@ export default {
       if (this.orderSort) {
         this.orderSort = "";
         this.pageNum = 1;
-        this.getBillPage(true);
+        this.getBillPage();
         return;
       }
       this.orderSort = "1";
       this.pageNum = 1;
-      this.getBillPage(true);
+      this.getBillPage();
     },
     bankCardChange(value) {
       this.bankCard = value.name;
       this.pageNum = 1;
-      this.getBillPage(true);
+      this.getBillPage();
     },
     billFilter(value) {
       this.transactionCategory = value.valueStr;
@@ -513,7 +520,7 @@ export default {
       this.pageNum = 1;
       this.endPageTime = "";
       this.list = [];
-      this.getBillPage(true);
+      this.getBillPage();
     },
     timeChange(e) {
       // 时间选择
@@ -527,7 +534,7 @@ export default {
       }
       this.totalKeyList = "";
       this.endPageTime = "";
-      this.getBillPage(true);
+      this.getBillPage();
     },
     formatBillDataResponse(res) {
       if (res.code === 200) {
@@ -565,7 +572,7 @@ export default {
         this.status = "loadmore";
       }
     },
-    getBillPage(flag) {
+    getBillPage() {
       if (this.activeTitle == 1) {
         getBillPage({
           pageSize: this.pageSize,
@@ -576,15 +583,26 @@ export default {
           totalKeyList: this.totalKeyList,
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
-        }).then((res) => {
-          if(this.pageNum == 1) {
-            this.formatBillDataResponse(res);
-            // 第一页请求第二页的
-            this.getBillPage();
-          }else {
-            this.nextReponse = res;
-          }
-        });
+        })
+          .then((res) => {
+            if (res.code === 200) {
+              this.list = [...this.list, ...res.data.list];
+              this.totalPage = res.data.pages;
+              this.totalKeyList = res.data.customizeParam.totalKeyList;
+              this.queryTime = res.data.customizeParam.queryTime;
+              this.pageNum = res.data.customizeParam.pageNum;
+              if (this.totalPage == 1) {
+                this.status = "nomore";
+              } else {
+                this.status = "loadmore";
+              }
+            } else {
+              this.status = "loadmore";
+            }
+          })
+          .catch((res) => {
+            console.log(res, "==============");
+          });
       } else {
         getBillPageRangePayment({
           pageSize: this.pageSize,
@@ -597,13 +615,23 @@ export default {
           minAmount: this.minAmount,
           maxAmount: this.maxAmount,
         }).then((res) => {
-          if(this.pageNum == 1) {
-            this.formatBillPageRangePaymentResponse(res);
-            // 第一页请求第二页的
-            this.pageNum = 2;
-            this.getBillPage();
-          }else {
-            this.nextReponse = res;
+          if (res.code === 200) {
+            this.list = [...this.list, ...res.data.list];
+            if (this.pageNum <= 1) {
+              this.billRangeData = res.data;
+            }
+            this.totalPage = res.data.pages;
+            if (res.data.list.length > 0) {
+              this.endPageTime =
+                res.data.list[res.data.list.length - 1].transactionTime;
+            }
+            if (this.totalPage == 1) {
+              this.status = "nomore";
+            } else {
+              this.status = "loadmore";
+            }
+          } else {
+            this.status = "loadmore";
           }
         });
       }

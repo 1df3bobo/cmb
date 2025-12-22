@@ -19,11 +19,13 @@
 					<image @click="goCustomer" v-if="aiBtn" class="nav-icon" :src="aiBtnIcon"></image>
 					<!-- 客服按钮 -->
 					<image @click="goService" v-if="serviceBtn" class="nav-icon" :src="serviceBtnIcon"></image>
+          <!-- 标签按钮 -->
+					<image v-if="labelBtn" class="label-icon" :src="labelBtnIcon"></image>
 					<!-- 更多按钮 -->
 					<!-- <image v-if="moreBtn" class="nav-icon" :src="moreBtnIcon"></image> -->
 					<zb-popover v-if="moreBtn" placement="bottom-end" :options="actions" theme="dark" ref="Popover1"
 						@handleClick="handleClick" @select="selectPopover" class="item-popover">
-						<image class="nav-icon" :src="moreBtnIcon"></image>
+						<image class="nav-icon" style="margin-top: 3rpx;" :src="moreBtnIcon"></image>
 					</zb-popover>
 				</view>
 			</div>
@@ -88,6 +90,14 @@
 			shareBtnIcon: {
 				type: String,
 				default: '/static/icon/icon4.png'
+			},
+      labelBtn: {
+				type: Boolean,
+				default: false
+			},
+			labelBtnIcon: {
+				type: String,
+				default: '/static/icon/nav_label.png'
 			},
 			showBack: { // 是否展示左侧返回按钮
 				type: Boolean,
@@ -206,6 +216,12 @@
 					height: 44rpx;
 					margin-left: 30rpx;
 				}
+
+        .label-icon {
+          margin-left: 30rpx;
+          width: 48rpx;
+					height: 34rpx;
+        }
 
 
 			}

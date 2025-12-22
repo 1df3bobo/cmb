@@ -95,8 +95,8 @@
             :src="state ? '/static/icon/eye22.png' : '/static/icon/eye11.png'"
           ></image>
         </view>
-        <view class="balance-data" @click="account">
-          <view class="item">
+        <view class="balance-data">
+          <view class="item" style="width: 50%;" @click="account">
             <view class="label">总资产</view>
             <view class="content">
               <text v-if="state" class="symbol">￥</text>
@@ -106,13 +106,26 @@
               <text class="symbol" v-if="!state">******</text>
             </view>
           </view>
-          <view class="item right">
-            <view class="label">昨日收益</view>
+          <view
+            class="item right"
+            @click="
+              commonPages(
+                '/pages/commonPages/commonPages?pageImage=/static/pages/ccyhl.png&title=持仓赢好礼&labelBtn=true&serviceBtn=false'
+              )
+            "
+          >
+            <image
+              src="/static/icon/mine_hongbao.png"
+              class="red-paket"
+              mode="widthFix"
+            ></image>
+            <view>达标领5元现金</view>
+            <!-- <view class="label">昨日收益</view>
             <view class="content">
               <text v-if="state" class="symbol">+</text>
               <text v-if="state">0.00</text>
               <text class="symbol" v-if="!state">******</text>
-            </view>
+            </view> -->
           </view>
           <view class="tips">闪电贷获取额度抽好礼，至高赢马歇尔音箱</view>
         </view>
@@ -542,7 +555,16 @@ export default {
       color: #000000;
 
       &.right {
-        text-align: right;
+        margin-top: -50rpx;
+        display: flex;
+        flex-direction: column;
+        gap: 10rpx;
+        align-items: center;
+        font-size: 22rpx;
+
+        .red-paket {
+          width: 100rpx;
+        }
       }
 
       .label {

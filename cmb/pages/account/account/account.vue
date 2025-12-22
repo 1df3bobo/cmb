@@ -169,9 +169,9 @@
 			},
       goRecord() {
         if(this.type == 1) {
-          navigateTo({
-            url: '/pages/account/record/record'
-          })
+          // navigateTo({
+          //   url: '/pages/account/record/record'
+          // })
         }
       }
 		}
